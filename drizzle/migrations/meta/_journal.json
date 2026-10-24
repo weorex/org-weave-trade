@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792858830705,
+      "tag": "0000_weorex_phase1_secure_foundation",
+      "breakpoints": true
+    }
+  ]
 }
