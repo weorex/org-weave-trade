@@ -6,6 +6,7 @@
 - [ ] Verify signed-in creation, switching, and cross-tenant read/write denial. Blocker: no confirmed auth account exists; user must create and confirm their first account.
 
 # Phase 2
-- [ ] Apply immutable entity configuration versions, shared records, permissions, and tenant-safe relationships.
-- [ ] Build typed validation, reusable forms/details/tables, builder, preview, and version history.
-- [ ] Test multiple entity types, data preservation, permissions, and organization isolation; verify authenticated flow if an account is available.
+- [x] Apply immutable entity configuration versions, shared records, permissions, and tenant-safe relationships.
+- [x] Build typed validation, reusable forms/details/tables, builder, preview, and version history.
+- [x] Test multiple entity types, shared forms, data preservation, membership isolation, and permissions; 32 tests pass and live grants are verified.
+- [ ] Verify authenticated publication, record flows, organization switching, and live cross-tenant read/write denial. Blocker: no real auth users exist; a confirmed account is required.
