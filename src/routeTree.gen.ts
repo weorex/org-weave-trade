@@ -16,6 +16,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedEntityTypesRouteImport } from './routes/_authenticated/entity-types'
+import { Route as AuthenticatedLogisticsRouteImport } from './routes/_authenticated/logistics'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedTradeRouteImport } from './routes/_authenticated/trade'
 
@@ -54,6 +55,11 @@ const AuthenticatedEntityTypesRoute =
     path: '/entity-types',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLogisticsRoute = AuthenticatedLogisticsRouteImport.update({
+  id: '/logistics',
+  path: '/logistics',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entity-types': typeof AuthenticatedEntityTypesRoute
+  '/logistics': typeof AuthenticatedLogisticsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/trade': typeof AuthenticatedTradeRoute
 }
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entity-types': typeof AuthenticatedEntityTypesRoute
+  '/logistics': typeof AuthenticatedLogisticsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/trade': typeof AuthenticatedTradeRoute
 }
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/entity-types': typeof AuthenticatedEntityTypesRoute
+  '/_authenticated/logistics': typeof AuthenticatedLogisticsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/trade': typeof AuthenticatedTradeRoute
 }
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/dashboard'
     | '/entity-types'
+    | '/logistics'
     | '/onboarding'
     | '/trade'
   fileRoutesByTo: FileRoutesByTo
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/dashboard'
     | '/entity-types'
+    | '/logistics'
     | '/onboarding'
     | '/trade'
   id:
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/dashboard'
     | '/_authenticated/entity-types'
+    | '/_authenticated/logistics'
     | '/_authenticated/onboarding'
     | '/_authenticated/trade'
   fileRoutesById: FileRoutesById
@@ -190,6 +202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEntityTypesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/logistics': {
+      id: '/_authenticated/logistics'
+      path: '/logistics'
+      fullPath: '/logistics'
+      preLoaderRoute: typeof AuthenticatedLogisticsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/onboarding': {
       id: '/_authenticated/onboarding'
       path: '/onboarding'
@@ -210,6 +229,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEntityTypesRoute: typeof AuthenticatedEntityTypesRoute
+  AuthenticatedLogisticsRoute: typeof AuthenticatedLogisticsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedTradeRoute: typeof AuthenticatedTradeRoute
 }
@@ -217,6 +237,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEntityTypesRoute: AuthenticatedEntityTypesRoute,
+  AuthenticatedLogisticsRoute: AuthenticatedLogisticsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedTradeRoute: AuthenticatedTradeRoute,
 }
