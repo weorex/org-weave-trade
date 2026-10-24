@@ -23,3 +23,10 @@
 - [x] Build shared logistics profiles and workspace with filters and relationships.
 - [x] Test logistics validation, historical rates, tenant-key isolation and signed-in port/activity flows; report gaps in PHASE4.md.
 - [ ] Verify populated profiles, shipping routes, vehicles, transport quotes and document uploads in the browser. Blocker: no real logistics entity records or partner/quote/document details have been provided.
+
+# Phase 5
+- [x] Build separate TypeScript Manifest V3 capture extension with explicit capture, field editing, table mapping and selected rows.
+- [x] Add authenticated pairing and capture operations, tenant checks, server validation, duplicate handling, atomic idempotency and audit history.
+- [x] Package buildable source and installable ZIP; add installation instructions and run extension/privacy/API tests and live grant checks.
+- [ ] Verify populated capture save/readback and rollback-only RPC suite. Blockers: no configured real entity types; sandbox SQL role cannot execute authenticated-only RPC.
+- [ ] Verify production extension connection and save. Blocker: web app not published. Details in PHASE5.md.

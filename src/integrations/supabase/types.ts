@@ -96,6 +96,57 @@ export type Database = {
           },
         ]
       }
+      data_captures: {
+        Row: {
+          created_at: string
+          created_by: string
+          entity_id: string
+          id: string
+          organization_id: string
+          payload: Json
+          request_id: string
+          result: Json
+          source_url: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          entity_id: string
+          id?: string
+          organization_id: string
+          payload: Json
+          request_id: string
+          result: Json
+          source_url: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          entity_id?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          request_id?: string
+          result?: Json
+          source_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_captures_organization_id_entity_id_fkey"
+            columns: ["organization_id", "entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "data_captures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       entities: {
         Row: {
           configuration_version: number
@@ -1074,6 +1125,19 @@ export type Database = {
           p_expected: number
           p_id: string
           p_org: string
+        }
+        Returns: Json
+      }
+      save_data_capture: {
+        Args: {
+          p_contacts: Json
+          p_org: string
+          p_products: Json
+          p_request: string
+          p_source: string
+          p_type: string
+          p_values: Json
+          p_version: number
         }
         Returns: Json
       }

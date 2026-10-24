@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@source "../../src/components/ui/button.tsx";
+@theme inline {
+ --color-background: var(--background); --color-foreground: var(--foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground); --color-accent: var(--muted); --color-accent-foreground: var(--foreground); --color-border: var(--border); --color-input: var(--border); --color-ring: var(--primary); --color-destructive: var(--destructive); --color-destructive-foreground: var(--primary-foreground); --color-secondary: var(--muted); --color-secondary-foreground: var(--foreground);
+}
+:root { --background: #ffffff; --foreground: #18302c; --primary: #007d68; --primary-foreground: #ffffff; --muted: #f0f5f4; --muted-foreground: #586b66; --border: #d7e2df; --destructive: #b53441; font-family: 'Arial', sans-serif; letter-spacing: 0; }
+body { width: 680px; min-height: 500px; max-height: 590px; overflow: auto; margin: 0; background: var(--background); color: var(--foreground); }
+header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 18px 24px; }
+main { padding: 20px 24px; }
+h1 { font-size: 22px; font-weight: 650; } h2 { font-size: 16px; margin: 20px 0 12px; font-weight: 600; }
+label { display: grid; gap: 6px; font-size: 12px; color: var(--muted-foreground); }
+input:not([type=checkbox]),select,textarea { width: 100%; border: 1px solid var(--border); border-radius: 4px; padding: 8px; color: var(--foreground); background: var(--background); min-height: 36px; }
+input[type=checkbox] { accent-color: var(--primary); }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+table { width: 100%; font-size: 12px; border-collapse: collapse; } td,th { padding: 8px; border-bottom: 1px solid var(--border); text-align: left; max-width: 180px; overflow-wrap: anywhere; }
+th { background: var(--muted); } .table-scroll { overflow: auto; max-height: 230px; } .status { padding: 10px 0; font-size: 13px; overflow-wrap: anywhere; } .source { color: var(--muted-foreground); font-size: 12px; margin: 12px 0; overflow-wrap: anywhere; }
