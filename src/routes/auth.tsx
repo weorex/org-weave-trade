@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Brand } from '@/components/brand'
 import { pageHead } from '@/lib/page-head'
+import { takeReturnPath } from '@/lib/return-to'
 import port from '@/assets/trade-port.jpg'
 
 export const Route = createFileRoute('/auth')({ head: () => pageHead('Sign in', 'Sign in to your Weorex global trade workspace.'), component: Auth })
@@ -24,6 +25,7 @@ function Auth() {
       const result = signup ? await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin, data: { display_name: String(form.get('name') ?? '') } } }) : await supabase.auth.signInWithPassword({ email, password })
       if (result.error) { setMessage(result.error.message); return }
       if (signup && !result.data.session) { setMessage('Check your email to confirm your account before signing in.'); return }
+      const back = takeReturnPath(); if (back) { window.location.assign(back); return }
       await navigate({ to: '/dashboard' })
     } catch { setMessage('Unable to connect. Please try again.') } finally { setBusy(false) }
   }
