@@ -80,6 +80,6 @@ export const openLogisticsDocument = createServerFn({ method: 'POST' }).middlewa
   // The sandbox-local server host is not browser-reachable; keep storage URLs
   // on the generated browser-facing origin while retaining the signed path.
   const signed = new URL(r.data.signedUrl)
-  return { url: `${import.meta.env.VITE_SUPABASE_URL}${signed.pathname}${signed.search}` }
+  return { url: `${import.meta.env['VITE_SUPABASE_URL']}${signed.pathname}${signed.search}` }
 })
 export type LogisticsWorkspaceData = Awaited<ReturnType<typeof getLogisticsWorkspace>>
