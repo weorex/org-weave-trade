@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      approval_requests: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string
+          entity_id: string
+          from_status: string
+          id: string
+          organization_id: string
+          reason: string
+          requested_by: string
+          status: string
+          to_status: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string
+          entity_id: string
+          from_status: string
+          id?: string
+          organization_id: string
+          reason?: string
+          requested_by: string
+          status?: string
+          to_status: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string
+          entity_id?: string
+          from_status?: string
+          id?: string
+          organization_id?: string
+          reason?: string
+          requested_by?: string
+          status?: string
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_requests_organization_id_entity_id_fkey"
+            columns: ["organization_id", "entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -342,6 +395,41 @@ export type Database = {
           },
         ]
       }
+      entity_states: {
+        Row: {
+          assignee_user_id: string | null
+          entity_id: string
+          organization_id: string
+          status: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          assignee_user_id?: string | null
+          entity_id: string
+          organization_id: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          assignee_user_id?: string | null
+          entity_id?: string
+          organization_id?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_states_organization_id_entity_id_fkey"
+            columns: ["organization_id", "entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
       entity_type_layouts: {
         Row: {
           configuration_version: number
@@ -556,6 +644,101 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          link_entity_id: string | null
+          organization_id: string
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          link_entity_id?: string | null
+          organization_id: string
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          link_entity_id?: string | null
+          organization_id?: string
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_invitations: {
+        Row: {
+          accepted_at: string | null
+          accepted_by: string | null
+          created_at: string
+          created_by: string
+          expires_at: string
+          id: string
+          organization_id: string
+          revoked_at: string | null
+          role_key: string
+          token_hash: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          created_by: string
+          expires_at: string
+          id?: string
+          organization_id: string
+          revoked_at?: string | null
+          role_key: string
+          token_hash: string
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          created_by?: string
+          expires_at?: string
+          id?: string
+          organization_id?: string
+          revoked_at?: string | null
+          role_key?: string
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_invitations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_invitations_organization_id_role_key_fkey"
+            columns: ["organization_id", "role_key"]
+            isOneToOne: false
+            referencedRelation: "organization_roles"
+            referencedColumns: ["organization_id", "role_key"]
+          },
+        ]
+      }
       organization_memberships: {
         Row: {
           created_at: string
@@ -601,16 +784,19 @@ export type Database = {
       organization_roles: {
         Row: {
           display_name: string
+          is_system: boolean
           organization_id: string
           role_key: string
         }
         Insert: {
           display_name: string
+          is_system?: boolean
           organization_id: string
           role_key: string
         }
         Update: {
           display_name?: string
+          is_system?: boolean
           organization_id?: string
           role_key?: string
         }
@@ -822,6 +1008,56 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_counters: {
+        Row: {
+          action: string
+          hits: number
+          organization_id: string
+          user_id: string
+          window_start: string
+        }
+        Insert: {
+          action: string
+          hits?: number
+          organization_id: string
+          user_id: string
+          window_start: string
+        }
+        Update: {
+          action?: string
+          hits?: number
+          organization_id?: string
+          user_id?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      role_permissions: {
+        Row: {
+          organization_id: string
+          permission: string
+          role_key: string
+        }
+        Insert: {
+          organization_id: string
+          permission: string
+          role_key: string
+        }
+        Update: {
+          organization_id?: string
+          permission?: string
+          role_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_organization_id_role_key_fkey"
+            columns: ["organization_id", "role_key"]
+            isOneToOne: false
+            referencedRelation: "organization_roles"
+            referencedColumns: ["organization_id", "role_key"]
+          },
+        ]
+      }
       shipping_rates: {
         Row: {
           amount: number
@@ -976,6 +1212,44 @@ export type Database = {
           },
         ]
       }
+      status_transitions: {
+        Row: {
+          created_at: string
+          entity_type_id: string
+          from_status: string
+          id: string
+          organization_id: string
+          requires_approval: boolean
+          to_status: string
+        }
+        Insert: {
+          created_at?: string
+          entity_type_id: string
+          from_status: string
+          id?: string
+          organization_id: string
+          requires_approval?: boolean
+          to_status: string
+        }
+        Update: {
+          created_at?: string
+          entity_type_id?: string
+          from_status?: string
+          id?: string
+          organization_id?: string
+          requires_approval?: boolean
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "status_transitions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transporter_assets: {
         Row: {
           capacity_cbm: number
@@ -1084,11 +1358,170 @@ export type Database = {
           },
         ]
       }
+      workflow_run_logs: {
+        Row: {
+          action: string
+          attempt: number
+          created_at: string
+          id: string
+          message: string
+          organization_id: string
+          outcome: string
+          run_id: string
+          step_index: number
+        }
+        Insert: {
+          action: string
+          attempt: number
+          created_at?: string
+          id?: string
+          message?: string
+          organization_id: string
+          outcome: string
+          run_id: string
+          step_index: number
+        }
+        Update: {
+          action?: string
+          attempt?: number
+          created_at?: string
+          id?: string
+          message?: string
+          organization_id?: string
+          outcome?: string
+          run_id?: string
+          step_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_run_logs_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_runs: {
+        Row: {
+          attempts: number
+          created_at: string
+          created_by: string
+          definition: Json
+          entity_id: string
+          finished_at: string | null
+          id: string
+          last_error: string
+          max_attempts: number
+          organization_id: string
+          request_id: string
+          status: string
+          workflow_id: string
+          workflow_version: number
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          created_by: string
+          definition: Json
+          entity_id: string
+          finished_at?: string | null
+          id?: string
+          last_error?: string
+          max_attempts?: number
+          organization_id: string
+          request_id: string
+          status?: string
+          workflow_id: string
+          workflow_version: number
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          created_by?: string
+          definition?: Json
+          entity_id?: string
+          finished_at?: string | null
+          id?: string
+          last_error?: string
+          max_attempts?: number
+          organization_id?: string
+          request_id?: string
+          status?: string
+          workflow_id?: string
+          workflow_version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_runs_organization_id_entity_id_fkey"
+            columns: ["organization_id", "entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "workflow_runs_organization_id_workflow_id_fkey"
+            columns: ["organization_id", "workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      workflows: {
+        Row: {
+          active: boolean
+          created_by: string
+          definition: Json
+          entity_type_id: string
+          id: string
+          name: string
+          organization_id: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          created_by: string
+          definition: Json
+          entity_type_id: string
+          id?: string
+          name: string
+          organization_id: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          created_by?: string
+          definition?: Json
+          entity_type_id?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      accept_invitation: { Args: { p_token: string }; Returns: string }
+      apply_entity_status: {
+        Args: { p_entity: string; p_org: string; p_to: string }
+        Returns: undefined
+      }
       can_entity: {
         Args: { p_action: string; p_org: string; p_type: string }
         Returns: boolean
@@ -1110,15 +1543,56 @@ export type Database = {
         Args: { p_entity: string; p_org: string; p_write?: boolean }
         Returns: boolean
       }
+      create_invitation: {
+        Args: { p_hours: number; p_org: string; p_role: string }
+        Returns: Json
+      }
+      decide_approval: {
+        Args: {
+          p_approve: boolean
+          p_id: string
+          p_note: string
+          p_org: string
+        }
+        Returns: string
+      }
+      execute_workflow_run: { Args: { p_run: string }; Returns: Json }
       has_org_role: {
         Args: { p_org_id: string; p_roles: string[] }
         Returns: boolean
+      }
+      has_permission: {
+        Args: { p_org: string; p_perm: string }
+        Returns: boolean
+      }
+      hit_rate_limit: {
+        Args: {
+          p_action: string
+          p_limit: number
+          p_org: string
+          p_window_seconds: number
+        }
+        Returns: undefined
       }
       import_trade_catalogue: {
         Args: { p_org: string; p_rows: Json; p_supplier: string }
         Returns: Json
       }
       is_org_member: { Args: { p_org_id: string }; Returns: boolean }
+      mark_notifications_read: {
+        Args: { p_ids: string[]; p_org: string }
+        Returns: number
+      }
+      notify_user: {
+        Args: {
+          p_body: string
+          p_entity: string
+          p_org: string
+          p_title: string
+          p_user: string
+        }
+        Returns: undefined
+      }
       publish_entity_configuration: {
         Args: {
           p_config: Json
@@ -1127,6 +1601,42 @@ export type Database = {
           p_org: string
         }
         Returns: Json
+      }
+      request_entity_status: {
+        Args: {
+          p_entity: string
+          p_force_approval: boolean
+          p_org: string
+          p_reason: string
+          p_to: string
+        }
+        Returns: string
+      }
+      retry_workflow_run: {
+        Args: { p_org: string; p_run: string }
+        Returns: Json
+      }
+      revoke_invitation: {
+        Args: { p_id: string; p_org: string }
+        Returns: undefined
+      }
+      run_workflow: {
+        Args: {
+          p_entity: string
+          p_org: string
+          p_request: string
+          p_workflow: string
+        }
+        Returns: Json
+      }
+      save_custom_role: {
+        Args: {
+          p_key: string
+          p_name: string
+          p_org: string
+          p_permissions: string[]
+        }
+        Returns: undefined
       }
       save_data_capture: {
         Args: {
@@ -1140,6 +1650,53 @@ export type Database = {
           p_version: number
         }
         Returns: Json
+      }
+      save_status_transition: {
+        Args: {
+          p_from: string
+          p_org: string
+          p_requires_approval: boolean
+          p_to: string
+          p_type: string
+        }
+        Returns: undefined
+      }
+      save_workflow: {
+        Args: {
+          p_active: boolean
+          p_definition: Json
+          p_id: string
+          p_name: string
+          p_org: string
+          p_type: string
+        }
+        Returns: string
+      }
+      transition_entity: {
+        Args: {
+          p_entity: string
+          p_org: string
+          p_reason: string
+          p_to: string
+        }
+        Returns: string
+      }
+      update_member: {
+        Args: {
+          p_membership: string
+          p_org: string
+          p_role: string
+          p_status: string
+        }
+        Returns: undefined
+      }
+      validate_workflow_definition: {
+        Args: { p_def: Json; p_org: string }
+        Returns: undefined
+      }
+      write_audit: {
+        Args: { p_action: string; p_id: string; p_org: string; p_type: string }
+        Returns: undefined
       }
     }
     Enums: {
