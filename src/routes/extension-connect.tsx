@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useServerFn } from '@tanstack/react-start'
 import { ShieldCheck, Plug, Download, LogIn } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Brand } from '@/components/brand'
 import { pageHead } from '@/lib/page-head'
 import { extensionRedirect } from '@/services/capture-schemas'
+import { connectCaptureExtension } from '@/services/capture-session.functions'
 
 export const Route = createFileRoute('/extension-connect')({
   head: () => pageHead('Trade Capture extension', 'Download, install and securely connect the Weorex browser capture extension.'),
@@ -14,15 +16,19 @@ export const Route = createFileRoute('/extension-connect')({
 })
 function Connect() {
   const { redirect, state } = Route.useSearch()
+  const issue = useServerFn(connectCaptureExtension)
   const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false)
   async function connect() {
     setBusy(true)
     const { data } = await supabase.auth.getSession()
     if (!data.session) { setMessage('Sign in to Weorex in another tab, then return here and connect.'); setBusy(false); return }
     if (!redirect || !state) { setMessage('Start the connection from the installed extension.'); setBusy(false); return }
-    const target = new URL(redirect)
-    target.hash = new URLSearchParams({ access_token: data.session.access_token, expires_at: String(data.session.expires_at ?? 0), state }).toString()
-    window.location.assign(target.href)
+    try {
+      const result = await issue({ data: { redirect,state } })
+      const target = new URL(redirect)
+      target.hash = new URLSearchParams({ capture_session: result.credential, expires_at: String(result.expires), state }).toString()
+      window.location.assign(target.href)
+    } catch { setMessage('Connection failed. Sign in again and retry.'); setBusy(false) }
   }
   async function download() {
     try { const r = await fetch('/weorex-capture.zip'); if (!r.ok) throw new Error(); const url = URL.createObjectURL(await r.blob()); const a = document.createElement('a'); a.href = url; a.download = 'weorex-capture.zip'; a.click(); URL.revokeObjectURL(url) } catch { setMessage('Download unavailable. Please try again.') }

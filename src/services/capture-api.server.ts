@@ -2,13 +2,16 @@ import { createClient } from '@supabase/supabase-js'
 import type { Database, Json } from '@/integrations/supabase/types'
 import { buildRecordSchema, configurationSchema, may, type EntityData } from './entity-schemas'
 import { captureRequest } from './capture-schemas'
+import { readCaptureSession } from './capture-session.server'
 
 export const captureCors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS', 'Access-Control-Allow-Headers': 'Authorization,Content-Type', 'Cache-Control': 'no-store' }
 export async function handleCaptureApi(request: Request) {
   const reply = (data: unknown, status = 200) => Response.json(data, { status, headers: captureCors })
   try {
-    const token = request.headers.get('Authorization')?.match(/^Bearer (\S+)$/)?.[1]
-    if (!token) return reply({ error: 'Sign in to connect your extension.' }, 401)
+    const credential = request.headers.get('Authorization')?.match(/^Bearer (\S+)$/)?.[1]
+    if (!credential) return reply({ error: 'Sign in to connect your extension.' }, 401)
+    let token: string
+    try { token = await readCaptureSession(credential) } catch { return reply({ error: 'Session expired. Reconnect the extension.' }, 401) }
     const url = process.env['SUPABASE_URL']; const key = process.env['SUPABASE_PUBLISHABLE_KEY']
     if (!url || !key) return reply({ error: 'Capture service unavailable.' }, 503)
     const client = createClient<Database>(url, key, { auth: { persistSession: false, autoRefreshToken: false }, global: { headers: { Authorization: `Bearer ${token}` } } })

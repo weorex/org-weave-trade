@@ -15,7 +15,7 @@ export const captureRequest = z.object({
   contacts: z.array(z.object({ name: z.string().trim().min(1).max(160), email: z.union([z.literal(''), z.string().email()]).default(''), phone: z.string().max(80).default(''), position: z.string().max(100).default(''), notes: z.string().max(2000).default('') })).max(50).default([]),
 }).strict()
 export function extensionRedirect(value: string | null) {
-  if (!value || !/^https:\/\/[a-p]{32}\.chromiumapp\.org\/$/.test(value)) return null
+  if (value !== 'https://mlnkikhebcdilmbihjlgbjedmnbjamgc.chromiumapp.org/') return null
   return value
 }
 export function mapProductRows(rows: string[][], mapping: Record<string, number>, selected: number[]) {

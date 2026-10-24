@@ -47,7 +47,7 @@ function Popup() {
     if (!result) throw new Error('Connection cancelled')
     const url = new URL(result); if (`${url.origin}${url.pathname}` !== redirect) throw new Error('Invalid connection response')
     const hash = new URLSearchParams(url.hash.slice(1)); if (hash.get('state') !== state) throw new Error('Connection response did not match')
-    const token = hash.get('access_token'); const expires = Number(hash.get('expires_at'))
+    const token = hash.get('capture_session'); const expires = Number(hash.get('expires_at'))
     if (!token || !Number.isFinite(expires) || expires * 1000 <= Date.now()) throw new Error('Expired connection')
     const active = { token, expires }; await chrome.storage.session.set({ session: active }); setSession(active); await loadOrganizations(active)
   }) }
