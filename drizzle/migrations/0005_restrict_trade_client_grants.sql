@@ -1,0 +1,14 @@
+REVOKE ALL ON public.products,public.entity_products,public.contacts,public.product_prices,public.entity_relationships FROM authenticated,anon;
+GRANT SELECT,INSERT ON public.products TO authenticated;
+GRANT UPDATE(sku,name,category,description,unit,status) ON public.products TO authenticated;
+GRANT SELECT,INSERT ON public.entity_products TO authenticated;
+GRANT UPDATE(supplier_sku,moq,capacity,packaging,lead_time_days) ON public.entity_products TO authenticated;
+GRANT SELECT,INSERT,DELETE ON public.contacts TO authenticated;
+GRANT UPDATE(name,email,phone,position,notes) ON public.contacts TO authenticated;
+GRANT SELECT,INSERT ON public.product_prices TO authenticated;
+GRANT SELECT,INSERT,DELETE ON public.entity_relationships TO authenticated;
+GRANT UPDATE(notes) ON public.entity_relationships TO authenticated;
+GRANT ALL ON public.products,public.entity_products,public.contacts,public.product_prices,public.entity_relationships TO service_role;
+CREATE FUNCTION public.reject_price_history_change() RETURNS trigger LANGUAGE plpgsql SET search_path='' AS $$ BEGIN RAISE EXCEPTION 'Price history is append-only'; END $$;
+REVOKE ALL ON FUNCTION public.reject_price_history_change() FROM PUBLIC,anon;
+CREATE TRIGGER immutable_price_history BEFORE UPDATE OR DELETE ON public.product_prices FOR EACH ROW EXECUTE FUNCTION public.reject_price_history_change();

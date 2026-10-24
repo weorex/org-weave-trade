@@ -36,6 +36,13 @@
       "when": 1792859916716,
       "tag": "0004_phase3_trade_catalogue",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792860258090,
+      "tag": "0005_restrict_trade_client_grants",
+      "breakpoints": true
     }
   ]
 }
