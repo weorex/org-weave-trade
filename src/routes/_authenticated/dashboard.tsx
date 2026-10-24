@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Brand } from '@/components/brand'
 import { pageHead } from '@/lib/page-head'
+import { retryServerCall } from '@/lib/server-retry'
 import port from '@/assets/trade-port.jpg'
 
 export const Route = createFileRoute('/_authenticated/dashboard')({head:()=>pageHead('Organization dashboard','Your Weorex organization overview, membership, and activity.'),component:Dashboard})
@@ -17,9 +18,9 @@ function Dashboard(){
   const navigate=useNavigate();const cache=useQueryClient();const {user}=Route.useRouteContext()
   const [requested,setRequested]=useState<string|null>(null);const [view,setView]=useState('Overview');const [mobile,setMobile]=useState(false)
   useEffect(()=>{setRequested(localStorage.getItem('weorex.activeOrgId'))},[])
-  const orgs=useQuery({queryKey:['organizations',user.id],queryFn:()=>fetchOrganizations()})
+  const orgs=useQuery({queryKey:['organizations',user.id],queryFn:()=>retryServerCall(()=>fetchOrganizations(),{beforeRetry:()=>supabase.auth.refreshSession()})})
   const active=resolveOrganization(orgs.data??[],requested)
-  const overview=useQuery({queryKey:['overview',user.id,active?.id],queryFn:()=>{if(!active)throw new Error('Choose an organization');return fetchOverview({data:{organizationId:active.id}})},enabled:!!active})
+  const overview=useQuery({queryKey:['overview',user.id,active?.id],queryFn:()=>{if(!active)throw new Error('Choose an organization');const id=active.id;return retryServerCall(()=>fetchOverview({data:{organizationId:id}}),{beforeRetry:()=>supabase.auth.refreshSession()})},enabled:!!active})
   useEffect(()=>{if(orgs.isSuccess&&!active)void navigate({to:'/onboarding'})},[orgs.isSuccess,active,navigate])
   async function signOut(){await cache.cancelQueries();cache.clear();localStorage.removeItem('weorex.activeOrgId');await supabase.auth.signOut();await navigate({to:'/auth',replace:true})}
   const detail=overview.data

@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Building2, ArrowRight } from 'lucide-react'
 import { createOrganization, listOrganizations } from '@/services/organizations.functions'
@@ -9,6 +9,8 @@ import { Brand } from '@/components/brand'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { pageHead } from '@/lib/page-head'
+import { supabase } from '@/integrations/supabase/client'
+import { friendlyError, retryServerCall } from '@/lib/server-retry'
 export const Route = createFileRoute('/_authenticated/onboarding')({head:()=>pageHead('Create organization','Create a secure organization in Weorex.'),component:Onboarding})
 function Onboarding() {
   const create = useServerFn(createOrganization)
@@ -16,24 +18,27 @@ function Onboarding() {
   const navigate = useNavigate()
   const cache = useQueryClient()
   const { user } = Route.useRouteContext()
-  const organizations = useQuery({ queryKey: ['organizations', user.id], queryFn: () => list() })
+  const organizations = useQuery({ queryKey: ['organizations', user.id], queryFn: () => retryServerCall(() => list(), { beforeRetry: () => supabase.auth.refreshSession() }) })
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
+  // One suffix per creation attempt so automatic retries reuse the same identifier.
+  const suffix = useRef(crypto.randomUUID().slice(0, 8))
   return <main className="simple-page"><Brand/><form className="simple-form" onSubmit={async e => {
     e.preventDefault()
     setMessage('')
     const form = new FormData(e.currentTarget)
-    const parsed = organizationSchema.safeParse({ name, slug: organizationSlug(name, crypto.randomUUID().slice(0, 8)), postal_address: address, default_currency: String(form.get('currency')), default_country: String(form.get('country')).trim() || null })
+    const parsed = organizationSchema.safeParse({ name, slug: organizationSlug(name, suffix.current), postal_address: address, default_currency: String(form.get('currency')), default_country: String(form.get('country')).trim() || null })
     if (!parsed.success) { setMessage(parsed.error.issues[0]?.message ?? 'Please check your organization details.'); return }
     setBusy(true)
     try {
-      const org = await create({ data: parsed.data })
+      const org = await retryServerCall(() => create({ data: parsed.data }), { beforeRetry: () => supabase.auth.refreshSession() })
+      suffix.current = crypto.randomUUID().slice(0, 8)
       localStorage.setItem('weorex.activeOrgId', org.id)
       await cache.invalidateQueries({ queryKey: ['organizations', user.id] })
       await navigate({ to: '/dashboard', replace: true })
-    } catch (error) { setMessage(error instanceof Error ? error.message : 'Unable to create organization.') }
+    } catch (error) { setMessage(friendlyError(error, 'Unable to create organization.')) }
     finally { setBusy(false) }
   }}>
     <span className="flex size-12 items-center justify-center rounded-md bg-accent text-primary"><Building2/></span>
