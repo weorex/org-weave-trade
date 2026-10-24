@@ -64,6 +64,13 @@
       "when": 1792860945823,
       "tag": "0008_phase4_logistics_workspace",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792861092857,
+      "tag": "0009_harden_logistics_permissions_and_services",
+      "breakpoints": true
     }
   ]
 }
