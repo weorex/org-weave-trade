@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
-const sql = readFileSync(new URL('../../drizzle/migrations/0001_restrict_phase1_client_grants.sql', import.meta.url), 'utf8')
+const sql = readFileSync('drizzle/migrations/0001_restrict_phase1_client_grants.sql', 'utf8')
 describe('Tenant grant hardening', () => {
   it('removes inherited membership write privileges before granting read-only access', () => {
     const revoke = sql.indexOf('FROM authenticated;')
