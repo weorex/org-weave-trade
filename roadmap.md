@@ -10,3 +10,8 @@
 - [x] Build typed validation, reusable forms/details/tables, builder, preview, and version history.
 - [x] Test multiple entity types, shared forms, data preservation, membership isolation, and permissions; 32 tests pass and live grants are verified.
 - [ ] Verify authenticated publication, record flows, organization switching, and live cross-tenant read/write denial. Blocker: no real auth users exist; a confirmed account is required.
+
+# Phase 3
+- [ ] Add tenant-safe trade catalogue, supplier links, contacts, relationships, manufacturer profiles, and immutable price history.
+- [ ] Build catalogue and profile screens, duplicate detection, CSV import/export, filters and pagination.
+- [ ] Test relationship constraints, currency history, import validation and permissions; verify authenticated flows when a real account is available.
