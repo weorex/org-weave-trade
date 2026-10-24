@@ -19,7 +19,7 @@ async function rows<T extends typeof tables[number]>(c: Client, table: T, org: s
   const result: Database['public']['Tables'][T]['Row'][] = []
   for (let offset = 0; ; offset += 500) {
     const order = table === 'logistics_profiles' ? 'entity_id' : 'id'
-    const r = await c.from(table).select('*').eq('organization_id', org).order(order).range(offset, offset + 499)
+    const r = await c.from(table as typeof tables[number]).select('*').eq('organization_id', org).order(order).range(offset, offset + 499)
     check(r.error)
     result.push(...(r.data ?? []) as unknown as Database['public']['Tables'][T]['Row'][])
     if ((r.data?.length ?? 0) < 500) return result
@@ -63,6 +63,7 @@ export const addLogisticsRecord = createServerFn({ method: 'POST' }).middleware(
   if (data.kind === 'document') {
     if (!data.values.object_path.startsWith(`${org}/${data.values.entity_id}/`)) throw new Error('Document organization mismatch')
     const path = data.values.object_path.split('/').slice(0, -1).join('/'), filename = data.values.object_path.split('/').at(-1)
+    if (!filename) throw new Error('Invalid document path')
     const stored = await c.storage.from('logistics-documents').list(path, { search: filename })
     if (stored.error || !stored.data?.some(f => f.name === filename)) throw new Error('Upload the document before saving')
     ;({ error } = await c.from('logistics_documents').insert({ ...data.values, organization_id: org, created_by: context.userId }))
