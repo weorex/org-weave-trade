@@ -1,4 +1,5 @@
 # Phase 1
+- [ ] Fix onboarding address validation, lowercase country codes, and dashboard entry after organization creation.
 - [x] Apply organization foundation and secure access policies.
 - [x] Add real sign-in, user profiles, and organization onboarding.
 - [x] Build dashboard and organization switching with typed services.
