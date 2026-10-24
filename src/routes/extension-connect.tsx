@@ -12,7 +12,7 @@ import { connectCaptureExtension } from '@/services/capture-session.functions'
 
 export const Route = createFileRoute('/extension-connect')({
   head: () => pageHead('Trade Capture extension', 'Download, install and securely connect the Weorex browser capture extension.'),
-  validateSearch: (s: Record<string, unknown>) => ({ requested: typeof s['redirect'] === 'string' && s['redirect'] !== 'null', redirect: extensionRedirect(typeof s['redirect'] === 'string' ? s['redirect'] : null), state: typeof s['state'] === 'string' && /^[a-f0-9]{64}$/.test(s['state']) ? s['state'] : null }),
+  validateSearch: (s: Record<string, unknown>) => ({ requested: s['requested'] === true || s['requested'] === 'true' || (typeof s['redirect'] === 'string' && s['redirect'] !== 'null'), redirect: extensionRedirect(typeof s['redirect'] === 'string' ? s['redirect'] : null), state: typeof s['state'] === 'string' && /^[a-f0-9]{64}$/.test(s['state']) ? s['state'] : null }),
   component: Connect,
 })
 function Connect() {
