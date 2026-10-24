@@ -10,6 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## Architecture
+- Keep logistics partners linked one-to-one with shared entities; tenant-keyed ports, services, vehicles and append-only shipping/transport quotes use restrictive foreign keys so historical rates retain their original service attributes.
+- Store logistics documents in private organization/entity-scoped storage with matching entity-access policies and short-lived user-scoped signed URLs; capture logistics activity through protected insert triggers.
 - Store postal addresses separately from generated unique organization identifiers; read created organizations in a separate query after membership bootstrap completes, and invalidate the membership list before navigation to avoid cached-empty onboarding loops.
 - Use the TanStack Start file router; protected pages live under the integration-compatible `_authenticated` gate because sessions are browser-managed.
 - Keep authenticated organization operations in typed server functions using the user-scoped client, and resolve active membership on every tenant data request; browser organization selection is only a preference.
