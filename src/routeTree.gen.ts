@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ExtensionConnectRouteImport } from './routes/extension-connect'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -19,6 +20,7 @@ import { Route as AuthenticatedEntityTypesRouteImport } from './routes/_authenti
 import { Route as AuthenticatedLogisticsRouteImport } from './routes/_authenticated/logistics'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedTradeRouteImport } from './routes/_authenticated/trade'
+import { Route as ApiPublicCaptureRouteImport } from './routes/api/public/capture'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -32,6 +34,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExtensionConnectRoute = ExtensionConnectRouteImport.update({
+  id: '/extension-connect',
+  path: '/extension-connect',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -70,10 +77,16 @@ const AuthenticatedTradeRoute = AuthenticatedTradeRouteImport.update({
   path: '/trade',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicCaptureRoute = ApiPublicCaptureRouteImport.update({
+  id: '/api/public/capture',
+  path: '/api/public/capture',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/extension-connect': typeof ExtensionConnectRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -81,10 +94,12 @@ export interface FileRoutesByFullPath {
   '/logistics': typeof AuthenticatedLogisticsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/trade': typeof AuthenticatedTradeRoute
+  '/api/public/capture': typeof ApiPublicCaptureRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/extension-connect': typeof ExtensionConnectRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -92,12 +107,14 @@ export interface FileRoutesByTo {
   '/logistics': typeof AuthenticatedLogisticsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/trade': typeof AuthenticatedTradeRoute
+  '/api/public/capture': typeof ApiPublicCaptureRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/extension-connect': typeof ExtensionConnectRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -105,12 +122,14 @@ export interface FileRoutesById {
   '/_authenticated/logistics': typeof AuthenticatedLogisticsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/trade': typeof AuthenticatedTradeRoute
+  '/api/public/capture': typeof ApiPublicCaptureRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
+    | '/extension-connect'
     | '/forgot-password'
     | '/reset-password'
     | '/dashboard'
@@ -118,10 +137,12 @@ export interface FileRouteTypes {
     | '/logistics'
     | '/onboarding'
     | '/trade'
+    | '/api/public/capture'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/extension-connect'
     | '/forgot-password'
     | '/reset-password'
     | '/dashboard'
@@ -129,11 +150,13 @@ export interface FileRouteTypes {
     | '/logistics'
     | '/onboarding'
     | '/trade'
+    | '/api/public/capture'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/extension-connect'
     | '/forgot-password'
     | '/reset-password'
     | '/_authenticated/dashboard'
@@ -141,14 +164,17 @@ export interface FileRouteTypes {
     | '/_authenticated/logistics'
     | '/_authenticated/onboarding'
     | '/_authenticated/trade'
+    | '/api/public/capture'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ExtensionConnectRoute: typeof ExtensionConnectRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicCaptureRoute: typeof ApiPublicCaptureRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +198,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/extension-connect': {
+      id: '/extension-connect'
+      path: '/extension-connect'
+      fullPath: '/extension-connect'
+      preLoaderRoute: typeof ExtensionConnectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -223,6 +256,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTradeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/capture': {
+      id: '/api/public/capture'
+      path: '/api/public/capture'
+      fullPath: '/api/public/capture'
+      preLoaderRoute: typeof ApiPublicCaptureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -249,8 +289,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ExtensionConnectRoute: ExtensionConnectRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicCaptureRoute: ApiPublicCaptureRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
