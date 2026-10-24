@@ -23,3 +23,8 @@
 - [x] Build shared logistics profiles and workspace with filters and relationships.
 - [x] Test logistics validation, historical rates, tenant-key isolation and signed-in port/activity flows; report gaps in PHASE4.md.
 - [ ] Verify populated profiles, shipping routes, vehicles, transport quotes and document uploads in the browser. Blocker: no real logistics entity records or partner/quote/document details have been provided.
+
+# Phase 5
+- [ ] Build separate TypeScript Manifest V3 capture extension with explicit capture, field editing, table mapping and selected rows.
+- [ ] Add authenticated pairing and capture operations, tenant checks, server validation, duplicate handling, atomic idempotency and audit history.
+- [ ] Package buildable source and installable ZIP; add installation instructions and run extension/API/database tests.
