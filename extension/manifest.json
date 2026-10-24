@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Weorex Trade Capture",
+  "version": "1.0.0",
+  "description": "Review and save company, product and contact information to your Weorex organization after explicit capture.",
+  "permissions": ["activeTab", "scripting", "storage", "identity"],
+  "host_permissions": ["https://org-weave-trade.lovable.app/*"],
+  "action": { "default_popup": "popup.html", "default_title": "Weorex Trade Capture" },
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'" }
+}
