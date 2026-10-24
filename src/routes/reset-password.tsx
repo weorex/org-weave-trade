@@ -1,0 +1,8 @@
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { supabase } from '@/integrations/supabase/client'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { pageHead } from '@/lib/page-head'
+export const Route = createFileRoute('/reset-password')({head:()=>pageHead('New password','Set a new password for your Weorex account.'),component:Reset})
+function Reset(){const [recovery,setRecovery]=useState(false);const [message,setMessage]=useState('');const [busy,setBusy]=useState(false);useEffect(()=>{setRecovery(window.location.hash.includes('type=recovery') || sessionStorage.getItem('weorex.recovery')==='true')},[]);return <main className="simple-page"><form className="simple-form" onSubmit={async e=>{e.preventDefault();if(!recovery)return;setBusy(true);const password=String(new FormData(e.currentTarget).get('password'));try{const {error}=await supabase.auth.updateUser({password});setMessage(error?'Unable to update your password. Request a new reset link.':'Password updated. You can now sign in.');if(!error)sessionStorage.removeItem('weorex.recovery')}catch{setMessage('Unable to connect.')}finally{setBusy(false)}}}><h1 className="text-3xl font-semibold">Set a new password</h1>{recovery?<><label className="field-label">New password<Input name="password" type="password" minLength={8} maxLength={128} required /></label><Button disabled={busy}>Update password</Button></>:<p>Open the password reset link from your email to continue.</p>}{message&&<p role="status">{message}</p>}<Link to="/auth" className="text-primary">Back to sign in</Link></form></main>}
