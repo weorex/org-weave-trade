@@ -14,9 +14,11 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ExtensionConnectRouteImport } from './routes/extension-connect'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as InviteRouteImport } from './routes/invite'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedEntityTypesRouteImport } from './routes/_authenticated/entity-types'
+import { Route as AuthenticatedGovernanceRouteImport } from './routes/_authenticated/governance'
 import { Route as AuthenticatedLogisticsRouteImport } from './routes/_authenticated/logistics'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedTradeRouteImport } from './routes/_authenticated/trade'
@@ -46,6 +48,11 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InviteRoute = InviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -62,6 +69,11 @@ const AuthenticatedEntityTypesRoute =
     path: '/entity-types',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedGovernanceRoute = AuthenticatedGovernanceRouteImport.update({
+  id: '/governance',
+  path: '/governance',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedLogisticsRoute = AuthenticatedLogisticsRouteImport.update({
   id: '/logistics',
   path: '/logistics',
@@ -88,9 +100,11 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/extension-connect': typeof ExtensionConnectRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/invite': typeof InviteRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entity-types': typeof AuthenticatedEntityTypesRoute
+  '/governance': typeof AuthenticatedGovernanceRoute
   '/logistics': typeof AuthenticatedLogisticsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/trade': typeof AuthenticatedTradeRoute
@@ -101,9 +115,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/extension-connect': typeof ExtensionConnectRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/invite': typeof InviteRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entity-types': typeof AuthenticatedEntityTypesRoute
+  '/governance': typeof AuthenticatedGovernanceRoute
   '/logistics': typeof AuthenticatedLogisticsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/trade': typeof AuthenticatedTradeRoute
@@ -116,9 +132,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/extension-connect': typeof ExtensionConnectRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/invite': typeof InviteRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/entity-types': typeof AuthenticatedEntityTypesRoute
+  '/_authenticated/governance': typeof AuthenticatedGovernanceRoute
   '/_authenticated/logistics': typeof AuthenticatedLogisticsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/trade': typeof AuthenticatedTradeRoute
@@ -131,9 +149,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/extension-connect'
     | '/forgot-password'
+    | '/invite'
     | '/reset-password'
     | '/dashboard'
     | '/entity-types'
+    | '/governance'
     | '/logistics'
     | '/onboarding'
     | '/trade'
@@ -144,9 +164,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/extension-connect'
     | '/forgot-password'
+    | '/invite'
     | '/reset-password'
     | '/dashboard'
     | '/entity-types'
+    | '/governance'
     | '/logistics'
     | '/onboarding'
     | '/trade'
@@ -158,9 +180,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/extension-connect'
     | '/forgot-password'
+    | '/invite'
     | '/reset-password'
     | '/_authenticated/dashboard'
     | '/_authenticated/entity-types'
+    | '/_authenticated/governance'
     | '/_authenticated/logistics'
     | '/_authenticated/onboarding'
     | '/_authenticated/trade'
@@ -173,6 +197,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ExtensionConnectRoute: typeof ExtensionConnectRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  InviteRoute: typeof InviteRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiPublicCaptureRoute: typeof ApiPublicCaptureRoute
 }
@@ -214,6 +239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -233,6 +265,13 @@ declare module '@tanstack/react-router' {
       path: '/entity-types'
       fullPath: '/entity-types'
       preLoaderRoute: typeof AuthenticatedEntityTypesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/governance': {
+      id: '/_authenticated/governance'
+      path: '/governance'
+      fullPath: '/governance'
+      preLoaderRoute: typeof AuthenticatedGovernanceRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/logistics': {
@@ -269,6 +308,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEntityTypesRoute: typeof AuthenticatedEntityTypesRoute
+  AuthenticatedGovernanceRoute: typeof AuthenticatedGovernanceRoute
   AuthenticatedLogisticsRoute: typeof AuthenticatedLogisticsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedTradeRoute: typeof AuthenticatedTradeRoute
@@ -277,6 +317,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEntityTypesRoute: AuthenticatedEntityTypesRoute,
+  AuthenticatedGovernanceRoute: AuthenticatedGovernanceRoute,
   AuthenticatedLogisticsRoute: AuthenticatedLogisticsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedTradeRoute: AuthenticatedTradeRoute,
@@ -291,6 +332,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ExtensionConnectRoute: ExtensionConnectRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  InviteRoute: InviteRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ApiPublicCaptureRoute: ApiPublicCaptureRoute,
 }
