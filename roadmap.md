@@ -19,6 +19,7 @@
 - [ ] Verify populated signed-in catalogue/profile/link/quote/import/export flows and authenticated RLS/RPC tests. Blockers: no real entity records; sandbox SQL connection cannot impersonate authenticated role. See PHASE3.md.
 
 # Phase 4
-- [ ] Add tenant-isolated routes, immutable shipping/transport rates, vehicles, service areas, documents, and activity history.
-- [ ] Build shared logistics profiles and workspace with filters and relationships.
-- [ ] Test logistics validation, historical rates, tenant isolation, and signed-in flows; report verification gaps.
+- [x] Add tenant-isolated routes, immutable shipping/transport rates, vehicles, service areas, documents, and activity history.
+- [x] Build shared logistics profiles and workspace with filters and relationships.
+- [x] Test logistics validation, historical rates, tenant-key isolation and signed-in port/activity flows; report gaps in PHASE4.md.
+- [ ] Verify populated profiles, shipping routes, vehicles, transport quotes and document uploads in the browser. Blocker: no real logistics entity records or partner/quote/document details have been provided.
