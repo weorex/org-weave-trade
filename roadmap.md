@@ -17,3 +17,8 @@
 - [x] Build catalogue and profile screens, duplicate detection, CSV import/export, filters and pagination.
 - [x] Test relationship constraints and price history in rollback-only PostgreSQL tests; validate CSV, currencies, dates, duplicates and permissions in unit tests.
 - [ ] Verify populated signed-in catalogue/profile/link/quote/import/export flows and authenticated RLS/RPC tests. Blockers: no real entity records; sandbox SQL connection cannot impersonate authenticated role. See PHASE3.md.
+
+# Phase 4
+- [ ] Add tenant-isolated routes, immutable shipping/transport rates, vehicles, service areas, documents, and activity history.
+- [ ] Build shared logistics profiles and workspace with filters and relationships.
+- [ ] Test logistics validation, historical rates, tenant isolation, and signed-in flows; report verification gaps.
