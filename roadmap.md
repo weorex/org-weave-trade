@@ -25,6 +25,8 @@
 - [ ] Verify populated profiles, shipping routes, vehicles, transport quotes and document uploads in the browser. Blocker: no real logistics entity records or partner/quote/document details have been provided.
 
 # Phase 5
-- [ ] Build separate TypeScript Manifest V3 capture extension with explicit capture, field editing, table mapping and selected rows.
-- [ ] Add authenticated pairing and capture operations, tenant checks, server validation, duplicate handling, atomic idempotency and audit history.
-- [ ] Package buildable source and installable ZIP; add installation instructions and run extension/API/database tests.
+- [x] Build separate TypeScript Manifest V3 capture extension with explicit capture, field editing, table mapping and selected rows.
+- [x] Add authenticated pairing and capture operations, tenant checks, server validation, duplicate handling, atomic idempotency and audit history.
+- [x] Package buildable source and installable ZIP; add installation instructions and run extension/privacy/API tests and live grant checks.
+- [ ] Verify populated capture save/readback and rollback-only RPC suite. Blockers: no configured real entity types; sandbox SQL role cannot execute authenticated-only RPC.
+- [ ] Verify production extension connection and save. Blocker: web app not published. Details in PHASE5.md.
