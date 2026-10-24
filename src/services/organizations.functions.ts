@@ -14,9 +14,13 @@ export const createOrganization = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => organizationSchema.parse(data))
   .handler(async ({ data, context }) => {
-    const result = await context.supabase.from('organizations').insert({ ...data, owner_user_id: context.userId }).select('*').single()
+    // Read only after the INSERT finishes: the AFTER trigger establishes membership,
+    // while INSERT RETURNING checks the member-only SELECT policy too early.
+    const result = await context.supabase.from('organizations').insert({ ...data, owner_user_id: context.userId })
     if (result.error) throw new Error(result.error.code === '23505' ? 'This organization identifier is already taken. Please try again.' : 'Unable to create organization. Please try again.')
-    return result.data
+    const organization = await context.supabase.from('organizations').select('*').eq('slug', data.slug).single()
+    if (organization.error) throw new Error('Organization created, but unable to open it. Please return to the dashboard.')
+    return organization.data
   })
 
 export const getOrganizationOverview = createServerFn({ method: 'POST' })
