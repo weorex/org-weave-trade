@@ -50,6 +50,13 @@
       "when": 1792860349175,
       "tag": "0006_reserve_trade_profile_metadata_key",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792860535511,
+      "tag": "0007_organization_postal_address",
+      "breakpoints": true
     }
   ]
 }

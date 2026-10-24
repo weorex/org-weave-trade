@@ -1,0 +1,2 @@
+ALTER TABLE public.organizations ADD COLUMN postal_address text NOT NULL DEFAULT '';
+COMMENT ON COLUMN public.organizations.postal_address IS 'Postal address, stored separately from the unique organization identifier.';
