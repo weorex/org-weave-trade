@@ -25,17 +25,17 @@ export type TradeProfile=z.infer<typeof profileSchema>
 export type ImportRow=z.infer<typeof importRowSchema>
 export function canManageTrade(role:string){return role==='owner'||role==='admin'}
 export function normalizeDuplicateKey(value:string){return value.trim().toLowerCase()}
-export function duplicateRows(rows:ProductInput[]){const seen=new Set<string>();return rows.flatMap((r,i)=>{const key=normalizeDuplicateKey(r.sku);if(seen.has(key))return [i+2];seen.add(key);return []})}
+export function duplicateRows(rows:ProductInput[]){const seen=new Set<string>();return rows.flatMap((r,i)=>{const key=normalizeDuplicateKey(r['sku']);if(seen.has(key))return [i+2];seen.add(key);return []})}
 export function parseCatalogueCsv(text:string){
   const parsed=Papa.parse<Record<string,string>>(text,{header:true,skipEmptyLines:'greedy',transformHeader:h=>h.trim().toLowerCase()})
   if(parsed.errors.length)throw new Error(`CSV error: ${parsed.errors[0]?.message}`)
   if(!parsed.meta.fields?.includes('sku')||!parsed.meta.fields.includes('name'))throw new Error('CSV requires sku and name columns')
   if(parsed.data.length>500)throw new Error('Import at most 500 rows per file')
   const rows:ImportRow[]=[];const errors:{row:number;message:string}[]=[]
-  parsed.data.forEach((r,i)=>{const result=importRowSchema.safeParse({sku:r.sku,name:r.name,category:r.category||'',description:r.description||'',unit:r.unit||'piece',status:r.status||'active',moq:r.moq?Number(r.moq):1,capacity:r.capacity||'',packaging:r.packaging||'',...(r.amount?{amount:r.amount,currency:r.currency,effective_date:r.effective_date}:{})});if(result.success)rows.push(result.data);else errors.push({row:i+2,message:result.error.issues.map(e=>`${e.path.join('.')}: ${e.message}`).join('; ')})})
+  parsed.data.forEach((r,i)=>{const result=importRowSchema.safeParse({sku:r['sku'],name:r['name'],category:r['category']||'',description:r['description']||'',unit:r['unit']||'piece',status:r['status']||'active',moq:r['moq']?Number(r['moq']):1,capacity:r['capacity']||'',packaging:r['packaging']||'',...(r['amount']?{amount:r['amount'],currency:r['currency'],effective_date:r['effective_date']}:{})});if(result.success)rows.push(result.data);else errors.push({row:i+2,message:result.error.issues.map(e=>`${e.path.join('.')}: ${e.message}`).join('; ')})})
   duplicateRows(rows).forEach(row=>errors.push({row,message:'Duplicate SKU within file'}))
   return {rows,errors,total:parsed.data.length}
 }
 export function exportCsv(rows:Record<string,unknown>[]){return Papa.unparse(rows,{escapeFormulae:true})}
-export function priceSeries<T extends {currency:string;unit:string;min_quantity:number;effective_date:string;created_at:string}>(rows:T[],currency:string,unit:string,quantity:number){return rows.filter(r=>r.currency===currency&&r.unit===unit&&r.min_quantity===quantity).sort((a,b)=>b.effective_date.localeCompare(a.effective_date)||b.created_at.localeCompare(a.created_at))}
+export function priceSeries<T extends {currency:string;unit:string;min_quantity:number;effective_date:string;created_at:string}>(rows:T[],currency:string,unit:string,quantity:number){return rows.filter(r=>r['currency']===currency&&r['unit']===unit&&r.min_quantity===quantity).sort((a,b)=>b.effective_date.localeCompare(a.effective_date)||b.created_at.localeCompare(a.created_at))}
 export function formatMoney(amount:number|string,currency:string){return new Intl.NumberFormat(undefined,{style:'currency',currency,maximumFractionDigits:6}).format(Number(amount))}
