@@ -49,7 +49,9 @@ BEGIN
  PERFORM pg_temp.act(ud);
  IF public.decide_approval(o1,(SELECT id FROM public.approval_requests WHERE entity_id=e AND status='pending'),true,'ok')<>'approved' THEN RAISE EXCEPTION 'T14 approval failed'; END IF;
  IF (SELECT status FROM public.entity_states WHERE entity_id=e)<>'approved' THEN RAISE EXCEPTION 'T15 approved status not applied'; END IF;
+ PERFORM pg_temp.act(NULL);
  IF NOT EXISTS(SELECT 1 FROM public.notifications WHERE user_id=um AND title='Status changed to approved') THEN RAISE EXCEPTION 'T16 assignee not notified'; END IF;
+ PERFORM pg_temp.act(ud);
  IF EXISTS(SELECT 1 FROM public.notifications WHERE user_id<>ud) THEN RAISE EXCEPTION 'T17 notification read leaked other users'; END IF;
 
  -- Privilege escalation: a member with only "members.invite" cannot widen access
