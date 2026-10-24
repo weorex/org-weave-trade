@@ -30,3 +30,7 @@
 - [x] Package buildable source and installable ZIP; add installation instructions and run extension/privacy/API tests and live grant checks.
 - [ ] Verify populated capture save/readback and rollback-only RPC suite. Blockers: no configured real entity types; sandbox SQL role cannot execute authenticated-only RPC.
 - [ ] Verify production extension connection and save. Blocker: web app not published. Details in PHASE5.md.
+# Fixes (Oct 24)
+- [x] Organization switcher ignores selections; organization setup shows "Unauthorized" and creates duplicates on retry.
+- [x] Extension connect page: explain unrecognized extension copies and return after sign-in.
+- [ ] Extension connection on the live site. Blocker: the live site runs an older version and is private; needs publishing with the latest version.
