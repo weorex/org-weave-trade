@@ -362,6 +362,149 @@ export type Database = {
           },
         ]
       }
+      logistics_activity: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          entity_id: string | null
+          id: string
+          organization_id: string
+          resource_id: string | null
+          resource_type: string
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          organization_id: string
+          resource_id?: string | null
+          resource_type: string
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          organization_id?: string
+          resource_id?: string | null
+          resource_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "logistics_activity_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      logistics_documents: {
+        Row: {
+          created_at: string
+          created_by: string
+          entity_id: string
+          id: string
+          name: string
+          object_path: string
+          organization_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          entity_id: string
+          id?: string
+          name: string
+          object_path: string
+          organization_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          entity_id?: string
+          id?: string
+          name?: string
+          object_path?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "logistics_documents_organization_id_entity_id_fkey"
+            columns: ["organization_id", "entity_id"]
+            isOneToOne: false
+            referencedRelation: "logistics_profiles"
+            referencedColumns: ["organization_id", "entity_id"]
+          },
+          {
+            foreignKeyName: "logistics_documents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      logistics_profiles: {
+        Row: {
+          address: string
+          country: string
+          created_at: string
+          email: string
+          entity_id: string
+          kind: string
+          legal_name: string
+          license_number: string
+          notes: string
+          organization_id: string
+          phone: string
+        }
+        Insert: {
+          address?: string
+          country?: string
+          created_at?: string
+          email?: string
+          entity_id: string
+          kind: string
+          legal_name: string
+          license_number?: string
+          notes?: string
+          organization_id: string
+          phone?: string
+        }
+        Update: {
+          address?: string
+          country?: string
+          created_at?: string
+          email?: string
+          entity_id?: string
+          kind?: string
+          legal_name?: string
+          license_number?: string
+          notes?: string
+          organization_id?: string
+          phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "logistics_profiles_organization_id_entity_id_fkey"
+            columns: ["organization_id", "entity_id"]
+            isOneToOne: true
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "logistics_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_memberships: {
         Row: {
           created_at: string
@@ -468,6 +611,41 @@ export type Database = {
           timezone?: string
         }
         Relationships: []
+      }
+      ports: {
+        Row: {
+          city: string
+          code: string
+          country: string
+          id: string
+          name: string
+          organization_id: string
+        }
+        Insert: {
+          city?: string
+          code: string
+          country: string
+          id?: string
+          name: string
+          organization_id: string
+        }
+        Update: {
+          city?: string
+          code?: string
+          country?: string
+          id?: string
+          name?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ports_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_prices: {
         Row: {
@@ -593,6 +771,268 @@ export type Database = {
         }
         Relationships: []
       }
+      shipping_rates: {
+        Row: {
+          amount: number
+          asset_id: string | null
+          created_at: string
+          created_by: string
+          currency: string
+          id: string
+          min_quantity: number
+          notes: string
+          organization_id: string
+          service_area_id: string | null
+          shipping_route_id: string | null
+          unit: string
+          valid_from: string
+          valid_until: string
+        }
+        Insert: {
+          amount: number
+          asset_id?: string | null
+          created_at?: string
+          created_by?: string
+          currency: string
+          id?: string
+          min_quantity?: number
+          notes?: string
+          organization_id: string
+          service_area_id?: string | null
+          shipping_route_id?: string | null
+          unit: string
+          valid_from: string
+          valid_until: string
+        }
+        Update: {
+          amount?: number
+          asset_id?: string | null
+          created_at?: string
+          created_by?: string
+          currency?: string
+          id?: string
+          min_quantity?: number
+          notes?: string
+          organization_id?: string
+          service_area_id?: string | null
+          shipping_route_id?: string | null
+          unit?: string
+          valid_from?: string
+          valid_until?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipping_rates_organization_id_asset_id_fkey"
+            columns: ["organization_id", "asset_id"]
+            isOneToOne: false
+            referencedRelation: "transporter_assets"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "shipping_rates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shipping_rates_organization_id_service_area_id_fkey"
+            columns: ["organization_id", "service_area_id"]
+            isOneToOne: false
+            referencedRelation: "transporter_service_areas"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "shipping_rates_organization_id_shipping_route_id_fkey"
+            columns: ["organization_id", "shipping_route_id"]
+            isOneToOne: false
+            referencedRelation: "shipping_routes"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      shipping_routes: {
+        Row: {
+          container_type: string
+          created_at: string
+          destination_port_id: string
+          frequency: string
+          id: string
+          mode: string
+          notes: string
+          organization_id: string
+          origin_port_id: string
+          shipping_agent_entity_id: string
+          transit_max_days: number
+          transit_min_days: number
+        }
+        Insert: {
+          container_type?: string
+          created_at?: string
+          destination_port_id: string
+          frequency?: string
+          id?: string
+          mode: string
+          notes?: string
+          organization_id: string
+          origin_port_id: string
+          shipping_agent_entity_id: string
+          transit_max_days: number
+          transit_min_days: number
+        }
+        Update: {
+          container_type?: string
+          created_at?: string
+          destination_port_id?: string
+          frequency?: string
+          id?: string
+          mode?: string
+          notes?: string
+          organization_id?: string
+          origin_port_id?: string
+          shipping_agent_entity_id?: string
+          transit_max_days?: number
+          transit_min_days?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipping_routes_organization_id_destination_port_id_fkey"
+            columns: ["organization_id", "destination_port_id"]
+            isOneToOne: false
+            referencedRelation: "ports"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "shipping_routes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shipping_routes_organization_id_origin_port_id_fkey"
+            columns: ["organization_id", "origin_port_id"]
+            isOneToOne: false
+            referencedRelation: "ports"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "shipping_routes_organization_id_shipping_agent_entity_id_fkey"
+            columns: ["organization_id", "shipping_agent_entity_id"]
+            isOneToOne: false
+            referencedRelation: "logistics_profiles"
+            referencedColumns: ["organization_id", "entity_id"]
+          },
+        ]
+      }
+      transporter_assets: {
+        Row: {
+          capacity_cbm: number
+          capacity_kg: number
+          created_at: string
+          id: string
+          notes: string
+          organization_id: string
+          registration: string
+          transporter_entity_id: string
+          vehicle_type: string
+        }
+        Insert: {
+          capacity_cbm: number
+          capacity_kg: number
+          created_at?: string
+          id?: string
+          notes?: string
+          organization_id: string
+          registration: string
+          transporter_entity_id: string
+          vehicle_type: string
+        }
+        Update: {
+          capacity_cbm?: number
+          capacity_kg?: number
+          created_at?: string
+          id?: string
+          notes?: string
+          organization_id?: string
+          registration?: string
+          transporter_entity_id?: string
+          vehicle_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transporter_assets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transporter_assets_organization_id_transporter_entity_id_fkey"
+            columns: ["organization_id", "transporter_entity_id"]
+            isOneToOne: false
+            referencedRelation: "logistics_profiles"
+            referencedColumns: ["organization_id", "entity_id"]
+          },
+        ]
+      }
+      transporter_service_areas: {
+        Row: {
+          country: string
+          created_at: string
+          delivery_zone: string
+          id: string
+          name: string
+          notes: string
+          organization_id: string
+          pickup_zone: string
+          transit_max_days: number
+          transit_min_days: number
+          transporter_entity_id: string
+        }
+        Insert: {
+          country: string
+          created_at?: string
+          delivery_zone: string
+          id?: string
+          name: string
+          notes?: string
+          organization_id: string
+          pickup_zone: string
+          transit_max_days?: number
+          transit_min_days?: number
+          transporter_entity_id: string
+        }
+        Update: {
+          country?: string
+          created_at?: string
+          delivery_zone?: string
+          id?: string
+          name?: string
+          notes?: string
+          organization_id?: string
+          pickup_zone?: string
+          transit_max_days?: number
+          transit_min_days?: number
+          transporter_entity_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transporter_service_areas_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transporter_service_areas_organization_id_transporter_enti_fkey"
+            columns: ["organization_id", "transporter_entity_id"]
+            isOneToOne: false
+            referencedRelation: "logistics_profiles"
+            referencedColumns: ["organization_id", "entity_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -600,6 +1040,19 @@ export type Database = {
     Functions: {
       can_entity: {
         Args: { p_action: string; p_org: string; p_type: string }
+        Returns: boolean
+      }
+      can_logistics_object: {
+        Args: { p_name: string; p_write?: boolean }
+        Returns: boolean
+      }
+      can_logistics_rate: {
+        Args: {
+          p_area: string
+          p_org: string
+          p_route: string
+          p_write?: boolean
+        }
         Returns: boolean
       }
       can_trade_entity: {
