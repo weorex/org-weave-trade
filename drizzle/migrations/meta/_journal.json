@@ -71,6 +71,13 @@
       "when": 1792861092857,
       "tag": "0009_harden_logistics_permissions_and_services",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792861466616,
+      "tag": "0010_phase5_authenticated_data_captures",
+      "breakpoints": true
     }
   ]
 }
