@@ -1,0 +1,1 @@
+ALTER TABLE public.entity_field_definitions ADD CONSTRAINT entity_fields_reserved_trade_profile CHECK(field_key<>'trade_profile');

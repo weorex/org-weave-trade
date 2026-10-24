@@ -43,6 +43,13 @@
       "when": 1792860258090,
       "tag": "0005_restrict_trade_client_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792860349175,
+      "tag": "0006_reserve_trade_profile_metadata_key",
+      "breakpoints": true
     }
   ]
 }

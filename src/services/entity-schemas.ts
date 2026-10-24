@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const fieldKinds = ['text','textarea','number','boolean','date','email','url','select','relationship'] as const
 export const roles = ['owner','admin','member'] as const
-const key = z.string().regex(/^[a-z][a-z0-9_]{0,63}$/).refine(k => !['constructor','prototype','__proto__'].includes(k), 'Reserved key')
+const key = z.string().regex(/^[a-z][a-z0-9_]{0,63}$/).refine(k => !['constructor','prototype','__proto__','trade_profile'].includes(k), 'Reserved key')
 export const fieldSchema = z.object({
   key, label:z.string().trim().min(1).max(100), type:z.enum(fieldKinds), required:z.boolean(),
   settings:z.object({min:z.number().optional(),max:z.number().optional(),minLength:z.number().int().min(0).max(10000).optional(),maxLength:z.number().int().min(1).max(10000).optional(),options:z.array(z.string().min(1).max(100)).max(100).optional(),targetTypeId:z.string().uuid().optional()}).strict(),
@@ -35,7 +35,11 @@ export type VersionedType={id:string;version:number;createdAt:string;config:Enti
 export type EntityRecord={id:string;organization_id:string;entity_type_id:string;configuration_version:number;data:EntityData;revision:number;created_at:string;updated_at:string}
 export const entityRequest=z.object({organizationId:z.string().uuid()})
 export const publishRequest=entityRequest.extend({id:z.string().uuid().nullable(),expectedVersion:z.number().int().min(0),config:configurationSchema})
-export const saveRecordRequest=entityRequest.extend({typeId:z.string().uuid(),id:z.string().uuid().nullable(),revision:z.number().int().min(1).optional(),values:z.record(z.union([z.string().max(10000),z.number().finite(),z.boolean(),z.null()]))})
+export const saveRecordRequest=entityRequest.extend({typeId:z.string().uuid(),id:z.string().uuid().nullable(),revision:z.number().int().min(1).optional(),values:z.preprocess(v=>{
+  if(!v||typeof v!=='object'||Array.isArray(v))return v
+  // Trade profile edits have their own validated operation; shared forms retain them in PostgreSQL.
+  return Object.fromEntries(Object.entries(v).filter(([k])=>k!=='trade_profile'))
+},z.record(z.union([z.string().max(10000),z.number().finite(),z.boolean(),z.null()])))})
 
 export function buildRecordSchema(fields:FieldDefinition[]){
   const shape:Record<string,z.ZodTypeAny>={}
