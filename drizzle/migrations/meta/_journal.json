@@ -15,6 +15,13 @@
       "when": 1792859094530,
       "tag": "0001_restrict_phase1_client_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792859345027,
+      "tag": "0002_metadata_entities_versioned",
+      "breakpoints": true
     }
   ]
 }
