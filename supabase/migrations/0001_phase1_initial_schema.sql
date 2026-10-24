@@ -616,6 +616,8 @@ create table public.shipping_routes (
     notes text,
     created_at timestamptz not null default now(),
 
+    unique (organization_id, id),
+
     foreign key (organization_id, shipping_agent_entity_id)
         references public.entities(organization_id, id)
         on delete cascade,
