@@ -9,7 +9,7 @@ export const PERMISSION_LABELS: Record<(typeof PERMISSIONS)[number], string> = {
 }
 const status = z.string().regex(/^[a-z][a-z0-9_]{1,39}$/, 'Statuses use lowercase letters, numbers and underscores, e.g. under_review')
 const uuid = z.string().uuid()
-export const workflowStep = z.discriminatedUnion('action', [
+export const workflowStep = z.union([
   z.object({ action: z.literal('set_status'), to: status }).strict(),
   z.object({ action: z.literal('request_approval'), to: status }).strict(),
   z.object({ action: z.literal('assign'), user_id: uuid }).strict(),

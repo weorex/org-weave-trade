@@ -1,8 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware'
+import type { Database } from '@/integrations/supabase/types'
 import { acceptRequest, decisionRequest, inviteRequest, memberRequest, orgRequest, readRequest, retryRequest, revokeRequest, roleRequest, runRequest, safeDbError, transitionRequest, transitionRuleRequest, workflowRequest } from './governance-schemas'
 
-type Ctx = { supabase: any; userId: string }
+type Ctx = { supabase: SupabaseClient<Database>; userId: string }
 async function member(ctx: Ctx, org: string) {
   // Resolve active membership on every request; the browser's choice is only a preference.
   const m = await ctx.supabase.from('organization_memberships').select('role_key,status').eq('organization_id', org).eq('user_id', ctx.userId).eq('status', 'active').maybeSingle()
@@ -10,7 +12,7 @@ async function member(ctx: Ctx, org: string) {
   return m.data.role_key as string
 }
 async function rpc(ctx: Ctx, fn: string, args: Record<string, unknown>, fallback: string) {
-  const r = await ctx.supabase.rpc(fn, args)
+  const r = await (ctx.supabase as unknown as { rpc: (f: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { code?: string; message?: string } | null }> }).rpc(fn, args)
   if (r.error) throw new Error(safeDbError(r.error, fallback))
   return r.data
 }
@@ -39,14 +41,14 @@ export const getGovernance = createServerFn({ method: 'POST' }).middleware([requ
   for (const r of [roles, rolePerms, members, invites, types, entities, states, transitions, workflows, approvals, runs, notifications, audit]) if (r.error) throw new Error('Unable to load workflows and access')
   const latest = new Map<string, { id: string; name: string }>()
   for (const t of types.data ?? []) if (!latest.has(t.id)) latest.set(t.id, { id: t.id, name: t.name })
-  const names = new Map((profiles.data ?? []).map((p: { id: string; display_name: string }) => [p.id, p.display_name]))
+  const names = new Map((profiles.data ?? []).map(p => [p.id, p.display_name]))
   return {
     role, can, userId: context.userId,
-    roles: roles.data, rolePermissions: rolePerms.data,
-    members: members.data.map((m: { user_id: string }) => ({ ...m, name: (names.get(m.user_id) as string) || (m.user_id === context.userId ? 'You' : `Member ${m.user_id.slice(0, 8)}`) })),
-    invitations: invites.data, entityTypes: [...latest.values()],
-    entities: entities.data.map((e: { id: string; entity_type_id: string; data: Record<string, unknown> }) => ({ id: e.id, entityTypeId: e.entity_type_id, label: String(Object.values(e.data ?? {}).find(v => typeof v === 'string' && v) ?? e.id.slice(0, 8)) })),
-    states: states.data, transitions: transitions.data, workflows: workflows.data, approvals: approvals.data, runs: runs.data, notifications: notifications.data, audit: audit.data,
+    roles: roles.data ?? [], rolePermissions: rolePerms.data ?? [],
+    members: (members.data ?? []).map(m => ({ ...m, name: (names.get(m.user_id) as string | undefined) || (m.user_id === context.userId ? 'You' : `Member ${m.user_id.slice(0, 8)}`) })),
+    invitations: (invites.data ?? []) as { id: string; role_key: string; expires_at: string; accepted_at: string | null; revoked_at: string | null; created_at: string }[], entityTypes: [...latest.values()],
+    entities: (entities.data ?? []).map(e => ({ id: e.id, entityTypeId: e.entity_type_id, label: String(Object.values((e.data ?? {}) as Record<string, unknown>).find(v => typeof v === 'string' && v) ?? e.id.slice(0, 8)) })),
+    states: states.data ?? [], transitions: transitions.data ?? [], workflows: workflows.data ?? [], approvals: approvals.data ?? [], runs: runs.data ?? [], notifications: notifications.data ?? [], audit: (audit.data ?? []) as { id: string; action: string; resource_type: string; actor_user_id: string | null; created_at: string }[],
   }
 })
 
