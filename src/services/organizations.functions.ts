@@ -15,7 +15,7 @@ export const createOrganization = createServerFn({ method: 'POST' })
   .inputValidator((data: unknown) => organizationSchema.parse(data))
   .handler(async ({ data, context }) => {
     const result = await context.supabase.from('organizations').insert({ ...data, owner_user_id: context.userId }).select('*').single()
-    if (result.error) throw new Error(result.error.code === '23505' ? 'This organization address is already taken.' : 'Unable to create organization. Please try again.')
+    if (result.error) throw new Error(result.error.code === '23505' ? 'This organization identifier is already taken. Please try again.' : 'Unable to create organization. Please try again.')
     return result.data
   })
 
