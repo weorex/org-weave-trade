@@ -77,6 +77,9 @@ export const openLogisticsDocument = createServerFn({ method: 'POST' }).middlewa
   if (doc.error || !doc.data) throw new Error('Document access denied')
   const r = await context.supabase.storage.from('logistics-documents').createSignedUrl(doc.data.object_path, 60)
   if (r.error || !r.data) throw new Error('Unable to open document')
-  return { url: r.data.signedUrl }
+  // The sandbox-local server host is not browser-reachable; keep storage URLs
+  // on the generated browser-facing origin while retaining the signed path.
+  const signed = new URL(r.data.signedUrl)
+  return { url: `${import.meta.env.VITE_SUPABASE_URL}${signed.pathname}${signed.search}` }
 })
 export type LogisticsWorkspaceData = Awaited<ReturnType<typeof getLogisticsWorkspace>>
