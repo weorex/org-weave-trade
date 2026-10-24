@@ -1,0 +1,16 @@
+import { describe,it,expect } from 'vitest'
+import { canManageTrade,duplicateRows,parseCatalogueCsv,exportCsv,priceSeries,priceSchema,supplierLinkSchema,relationshipSchema,profileSchema } from '@/services/trade-schemas'
+const id='12345678-1234-4234-8234-123456789012'
+describe('Trade data rules',()=>{
+  it('requires positive MOQ for supplier-product relationships',()=>{expect(supplierLinkSchema.safeParse({entity_id:id,product_id:id,moq:0}).success).toBe(false);expect(supplierLinkSchema.parse({entity_id:id,product_id:id,moq:500,packaging:'25 kg bags'}).moq).toBe(500)})
+  it('keeps currency price histories separate',()=>{const rows=[{currency:'USD',unit:'kg',min_quantity:500,effective_date:'2026-10-01',created_at:'2026-10-01',amount:12},{currency:'INR',unit:'kg',min_quantity:500,effective_date:'2026-10-02',created_at:'2026-10-02',amount:1000},{currency:'USD',unit:'kg',min_quantity:500,effective_date:'2026-10-03',created_at:'2026-10-03',amount:11}];expect(priceSeries(rows,'USD','kg',500).map(p=>p.amount)).toEqual([11,12]);expect(priceSeries(rows,'INR','kg',500).map(p=>p.amount)).toEqual([1000])})
+  it('keeps units and MOQ tiers distinct',()=>{const rows=[{currency:'USD',unit:'kg',min_quantity:500,effective_date:'2026-10-01',created_at:'',amount:2},{currency:'USD',unit:'box',min_quantity:500,effective_date:'2026-10-01',created_at:'',amount:20},{currency:'USD',unit:'kg',min_quantity:1000,effective_date:'2026-10-01',created_at:'',amount:1}];expect(priceSeries(rows,'USD','kg',500).map(p=>p.amount)).toEqual([2])})
+  it('validates decimal amount, ISO currency and real quote dates',()=>{const base={entity_product_id:id,amount:'12.345678',currency:'USD',unit:'kg',min_quantity:500,effective_date:'2026-10-24'};expect(priceSchema.safeParse(base).success).toBe(true);for(const change of [{amount:'-1'},{amount:'1.2345678'},{currency:'ZZZ'},{effective_date:'2026-02-30'}])expect(priceSchema.safeParse({...base,...change}).success).toBe(false)})
+  it('denies members catalogue mutations',()=>{expect(canManageTrade('member')).toBe(false);expect(canManageTrade('owner')).toBe(true);expect(canManageTrade('admin')).toBe(true)})
+  it('detects case-insensitive repeated SKUs',()=>{expect(duplicateRows([{sku:' X-1 ',name:'A',category:'',description:'',unit:'kg',status:'active'},{sku:'x-1',name:'B',category:'',description:'',unit:'kg',status:'active'}])).toEqual([3])})
+  it('imports quoted commas and multiline descriptions',()=>{const r=parseCatalogueCsv('sku,name,description\nA1,"Rice, long grain","First line\nSecond line"');expect(r.errors).toEqual([]);expect(r.rows[0]?.name).toBe('Rice, long grain');expect(r.rows[0]?.description).toContain('\n')})
+  it('rejects incomplete imported price history',()=>{expect(parseCatalogueCsv('sku,name,amount\nA1,Rice,12').errors).toHaveLength(1)})
+  it('prevents self relationships',()=>{expect(relationshipSchema.safeParse({source_entity_id:id,target_entity_id:id,relationship_type:'supplier'}).success).toBe(false)})
+  it('stores manufacturer certifications in shared profiles',()=>{expect(profileSchema.parse({kind:'manufacturer',legal_name:'Rice Mill',certifications:['ISO 9001','HACCP']}).certifications).toEqual(['ISO 9001','HACCP'])})
+  it('neutralizes spreadsheet formula exports',()=>{expect(exportCsv([{sku:'=1+1',name:'Rice'}])).toContain("'=1+1")})
+})
