@@ -16,8 +16,19 @@ export const createOrganization = createServerFn({ method: 'POST' })
   .handler(async ({ data, context }) => {
     // Read only after the INSERT finishes: the AFTER trigger establishes membership,
     // while INSERT RETURNING checks the member-only SELECT policy too early.
+    // The slug doubles as an idempotency key: a retried request returns the organization
+    // this user already created instead of creating a duplicate.
+    const existing = await context.supabase.from('organizations').select('*').eq('slug', data.slug).eq('owner_user_id', context.userId).maybeSingle()
+    if (existing.data) return existing.data
     const result = await context.supabase.from('organizations').insert({ ...data, owner_user_id: context.userId })
-    if (result.error) throw new Error(result.error.code === '23505' ? 'This organization identifier is already taken. Please try again.' : 'Unable to create organization. Please try again.')
+    if (result.error) {
+      if (result.error.code === '23505') {
+        const retried = await context.supabase.from('organizations').select('*').eq('slug', data.slug).eq('owner_user_id', context.userId).maybeSingle()
+        if (retried.data) return retried.data
+        throw new Error('This organization identifier is already taken. Please try again.')
+      }
+      throw new Error('Unable to create organization. Please try again.')
+    }
     const organization = await context.supabase.from('organizations').select('*').eq('slug', data.slug).single()
     if (organization.error) throw new Error('Organization created, but unable to open it. Please return to the dashboard.')
     return organization.data
