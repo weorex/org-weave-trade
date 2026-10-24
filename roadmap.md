@@ -34,3 +34,9 @@
 - [x] Organization switcher ignores selections; organization setup shows "Unauthorized" and creates duplicates on retry.
 - [x] Extension connect page: explain unrecognized extension copies and return after sign-in.
 - [ ] Extension connection on the live site. Blocker: the live site runs an older version and is private; needs publishing with the latest version.
+
+# Phase 6
+- [x] Custom roles/permissions, invite links, status rules, approvals, allowlisted workflows with logs/retries, in-app notifications, audit, rate limits, monitoring view.
+- [x] Database tests for cross-tenant access, privilege escalation, file access, duplicate imports, workflow failures (41 checks pass, rolled back).
+- [x] Deployment checklist and risks in PHASE6.md.
+- [ ] Custom roles in entity-type permissions; resume workflows after approval. Not requested yet — listed as risks.
