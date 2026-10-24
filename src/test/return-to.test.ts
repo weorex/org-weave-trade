@@ -11,3 +11,11 @@ describe('sign-in return path', () => {
     expect(isSafeReturnPath('/dashboard')).toBe(false)
   })
 })
+
+describe('invitation return path', () => {
+  it('allows returning to an invitation link and nothing else', () => {
+    expect(isSafeReturnPath('/invite#' + 'a'.repeat(64))).toBe(true)
+    expect(isSafeReturnPath('/invite#abc')).toBe(false)
+    expect(isSafeReturnPath('/invite?next=https://evil.example')).toBe(false)
+  })
+})
