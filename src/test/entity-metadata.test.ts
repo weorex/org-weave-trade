@@ -1,7 +1,9 @@
 import { describe,expect,it } from 'vitest'
-import { assertOrganizationAccess,blankConfiguration,buildRecordSchema,configurationSchema,may,mergeRecordData,type FieldDefinition } from '@/services/entity-schemas'
+import { assertOrganizationAccess,blankConfiguration,buildRecordSchema,configurationSchema,may,mergeRecordData,saveRecordRequest,type FieldDefinition } from '@/services/entity-schemas'
 
 describe('Metadata-driven types',()=>{
+  it('allows editing metadata without sending the retained trade profile through scalar field validation',()=>{const request=saveRecordRequest.parse({organizationId:'12345678-1234-4234-8234-123456789012',typeId:'12345678-1234-4234-8234-123456789013',id:null,values:{name:'Updated Mill',trade_profile:{kind:'manufacturer',legal_name:'Mill',certifications:['HACCP']}}});expect(request.values).toEqual({name:'Updated Mill'})})
+  it('reserves the shared trade profile key from custom fields',()=>{const c=blankConfiguration();c.name='Supplier';c.key='supplier';c.fields[0]={key:'trade_profile',label:'Profile',type:'text',required:true,settings:{}};c.layout.form=['trade_profile'];expect(configurationSchema.safeParse(c).success).toBe(false)})
   const supplier:FieldDefinition[]=[{key:'name',label:'Name',type:'text',required:true,settings:{}},{key:'email',label:'Email',type:'email',required:true,settings:{}}]
   const shipment:FieldDefinition[]=[{key:'weight',label:'Weight',type:'number',required:true,settings:{min:0,max:500}},{key:'status',label:'Status',type:'select',required:true,settings:{options:['pending','shipped']}}]
   it('validates two distinct entity types with the same engine',()=>{

@@ -16,3 +16,5 @@
 - The applied Phase 1 foundation lives in Drizzle migrations; the older full-schema proposal in supabase/migrations is not applied and must not be treated as the live schema.
 - Entity types use immutable configuration revisions and a shared JSON record store; records retain their original revision so configuration changes never discard stored values.
 - Publish configuration atomically through a role-checked database function; reusable metadata renderers and user-scoped server functions share Zod schemas, while database policies and validation triggers protect direct API writes.
+- Store manufacturer profiles inside the shared entity JSON; normalized tenant-keyed trade tables hold products, supplier links, contacts, relationships and append-only quotes so catalogue and history queries stay indexed without per-type storage.
+- Trade catalogue writes require owner/admin membership and linked entity access; CSV import uses an invoker-rights atomic database function, skipping existing SKUs without overwriting records, to retain RLS and prevent partial imports.
