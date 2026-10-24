@@ -52,6 +52,50 @@ export type Database = {
           },
         ]
       }
+      contacts: {
+        Row: {
+          created_at: string
+          email: string
+          entity_id: string
+          id: string
+          name: string
+          notes: string
+          organization_id: string
+          phone: string
+          position: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          entity_id: string
+          id?: string
+          name: string
+          notes?: string
+          organization_id: string
+          phone?: string
+          position?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          entity_id?: string
+          id?: string
+          name?: string
+          notes?: string
+          organization_id?: string
+          phone?: string
+          position?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_organization_id_entity_id_fkey"
+            columns: ["organization_id", "entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
       entities: {
         Row: {
           configuration_version: number
@@ -145,6 +189,105 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "entity_types"
             referencedColumns: ["organization_id", "id", "version"]
+          },
+        ]
+      }
+      entity_products: {
+        Row: {
+          capacity: string
+          created_at: string
+          entity_id: string
+          id: string
+          lead_time_days: number | null
+          moq: number
+          organization_id: string
+          packaging: string
+          product_id: string
+          supplier_sku: string
+        }
+        Insert: {
+          capacity?: string
+          created_at?: string
+          entity_id: string
+          id?: string
+          lead_time_days?: number | null
+          moq?: number
+          organization_id: string
+          packaging?: string
+          product_id: string
+          supplier_sku?: string
+        }
+        Update: {
+          capacity?: string
+          created_at?: string
+          entity_id?: string
+          id?: string
+          lead_time_days?: number | null
+          moq?: number
+          organization_id?: string
+          packaging?: string
+          product_id?: string
+          supplier_sku?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_products_organization_id_entity_id_fkey"
+            columns: ["organization_id", "entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "entity_products_organization_id_product_id_fkey"
+            columns: ["organization_id", "product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      entity_relationships: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string
+          organization_id: string
+          relationship_type: string
+          source_entity_id: string
+          target_entity_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string
+          organization_id: string
+          relationship_type: string
+          source_entity_id: string
+          target_entity_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string
+          organization_id?: string
+          relationship_type?: string
+          source_entity_id?: string
+          target_entity_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_relationships_organization_id_source_entity_id_fkey"
+            columns: ["organization_id", "source_entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "entity_relationships_organization_id_target_entity_id_fkey"
+            columns: ["organization_id", "target_entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
           },
         ]
       }
@@ -323,6 +466,106 @@ export type Database = {
         }
         Relationships: []
       }
+      product_prices: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string
+          currency: string
+          effective_date: string
+          entity_product_id: string
+          id: string
+          min_quantity: number
+          notes: string
+          organization_id: string
+          unit: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string
+          currency: string
+          effective_date: string
+          entity_product_id: string
+          id?: string
+          min_quantity: number
+          notes?: string
+          organization_id: string
+          unit: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string
+          currency?: string
+          effective_date?: string
+          entity_product_id?: string
+          id?: string
+          min_quantity?: number
+          notes?: string
+          organization_id?: string
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_prices_organization_id_entity_product_id_fkey"
+            columns: ["organization_id", "entity_product_id"]
+            isOneToOne: false
+            referencedRelation: "entity_products"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string
+          description: string
+          id: string
+          name: string
+          organization_id: string
+          sku: string
+          status: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          id?: string
+          name: string
+          organization_id: string
+          sku: string
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          sku?: string
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -356,9 +599,17 @@ export type Database = {
         Args: { p_action: string; p_org: string; p_type: string }
         Returns: boolean
       }
+      can_trade_entity: {
+        Args: { p_entity: string; p_org: string; p_write?: boolean }
+        Returns: boolean
+      }
       has_org_role: {
         Args: { p_org_id: string; p_roles: string[] }
         Returns: boolean
+      }
+      import_trade_catalogue: {
+        Args: { p_org: string; p_rows: Json; p_supplier: string }
+        Returns: Json
       }
       is_org_member: { Args: { p_org_id: string }; Returns: boolean }
       publish_entity_configuration: {
