@@ -52,6 +52,173 @@ export type Database = {
           },
         ]
       }
+      entities: {
+        Row: {
+          configuration_version: number
+          created_at: string
+          created_by: string
+          data: Json
+          entity_type_id: string
+          id: string
+          organization_id: string
+          revision: number
+          updated_at: string
+        }
+        Insert: {
+          configuration_version: number
+          created_at?: string
+          created_by?: string
+          data?: Json
+          entity_type_id: string
+          id?: string
+          organization_id: string
+          revision?: number
+          updated_at?: string
+        }
+        Update: {
+          configuration_version?: number
+          created_at?: string
+          created_by?: string
+          data?: Json
+          entity_type_id?: string
+          id?: string
+          organization_id?: string
+          revision?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entities_organization_id_entity_type_id_configuration_vers_fkey"
+            columns: [
+              "organization_id",
+              "entity_type_id",
+              "configuration_version",
+            ]
+            isOneToOne: false
+            referencedRelation: "entity_types"
+            referencedColumns: ["organization_id", "id", "version"]
+          },
+        ]
+      }
+      entity_field_definitions: {
+        Row: {
+          configuration_version: number
+          entity_type_id: string
+          field_key: string
+          field_type: string
+          label: string
+          organization_id: string
+          position: number
+          required: boolean
+          settings: Json
+        }
+        Insert: {
+          configuration_version: number
+          entity_type_id: string
+          field_key: string
+          field_type: string
+          label: string
+          organization_id: string
+          position?: number
+          required?: boolean
+          settings?: Json
+        }
+        Update: {
+          configuration_version?: number
+          entity_type_id?: string
+          field_key?: string
+          field_type?: string
+          label?: string
+          organization_id?: string
+          position?: number
+          required?: boolean
+          settings?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_field_definitions_organization_id_entity_type_id_co_fkey"
+            columns: [
+              "organization_id",
+              "entity_type_id",
+              "configuration_version",
+            ]
+            isOneToOne: false
+            referencedRelation: "entity_types"
+            referencedColumns: ["organization_id", "id", "version"]
+          },
+        ]
+      }
+      entity_type_layouts: {
+        Row: {
+          configuration_version: number
+          entity_type_id: string
+          layout: Json
+          organization_id: string
+        }
+        Insert: {
+          configuration_version: number
+          entity_type_id: string
+          layout: Json
+          organization_id: string
+        }
+        Update: {
+          configuration_version?: number
+          entity_type_id?: string
+          layout?: Json
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_type_layouts_organization_id_entity_type_id_configu_fkey"
+            columns: [
+              "organization_id",
+              "entity_type_id",
+              "configuration_version",
+            ]
+            isOneToOne: false
+            referencedRelation: "entity_types"
+            referencedColumns: ["organization_id", "id", "version"]
+          },
+        ]
+      }
+      entity_types: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+          organization_id: string
+          type_key: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+          organization_id: string
+          type_key: string
+          version: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          type_key?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_types_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_memberships: {
         Row: {
           created_at: string
@@ -185,11 +352,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_entity: {
+        Args: { p_action: string; p_org: string; p_type: string }
+        Returns: boolean
+      }
       has_org_role: {
         Args: { p_org_id: string; p_roles: string[] }
         Returns: boolean
       }
       is_org_member: { Args: { p_org_id: string }; Returns: boolean }
+      publish_entity_configuration: {
+        Args: {
+          p_config: Json
+          p_expected: number
+          p_id: string
+          p_org: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
