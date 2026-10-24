@@ -438,6 +438,7 @@ export type Database = {
           id: string
           name: string
           owner_user_id: string
+          postal_address: string
           slug: string
           status: string
           timezone: string
@@ -449,6 +450,7 @@ export type Database = {
           id?: string
           name: string
           owner_user_id: string
+          postal_address?: string
           slug: string
           status?: string
           timezone?: string
@@ -460,6 +462,7 @@ export type Database = {
           id?: string
           name?: string
           owner_user_id?: string
+          postal_address?: string
           slug?: string
           status?: string
           timezone?: string

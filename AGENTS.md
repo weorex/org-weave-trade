@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Architecture
+- Store postal addresses separately from generated unique organization identifiers; read created organizations in a separate query after membership bootstrap completes, and invalidate the membership list before navigation to avoid cached-empty onboarding loops.
 - Use the TanStack Start file router; protected pages live under the integration-compatible `_authenticated` gate because sessions are browser-managed.
 - Keep authenticated organization operations in typed server functions using the user-scoped client, and resolve active membership on every tenant data request; browser organization selection is only a preference.
 - Store profiles separately from immutable organization role definitions and protected memberships; bootstrap owner access only when creating a new owned organization.
