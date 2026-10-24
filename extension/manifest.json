@@ -3,8 +3,21 @@
   "name": "Weorex Trade Capture",
   "version": "1.0.0",
   "description": "Review and save company, product and contact information to your Weorex organization after explicit capture.",
-  "permissions": ["activeTab", "scripting", "storage", "identity"],
-  "host_permissions": ["https://org-weave-trade.lovable.app/*"],
-  "action": { "default_popup": "popup.html", "default_title": "Weorex Trade Capture" },
-  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'" }
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://org-weave-trade.lovable.app/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Weorex Trade Capture"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuNF/XArs9pO6EABm+eVsHY6fuEHESbiEGPsJOJrTixQQQlnKE547lOghhe+vi2rDIa6svSwBacaQQZ+YSD+KG6eLEAYAEmm/GtFvvop9tTOvVVhd6jrn7Q3h6R5x3fy8pCLOq2EHh8iU53fwKCmNHj1HADZgEh6EIya5N8+3DhjCEukYVo3XN6VzC1XYPhUslQ7aQ5Vxdbyaf1MWyeXzWqjoRcAEbk3dfAqjBIUKmGJP4IvPw7lcEAgFpq+j46tiPk0fDSbgov3/IIiowxx5xKvidKE2JUC5C3jXSf/LdTx0ckAsm44qeC0BXXqDn/REu4dtp4uaSnRn9TDiAKt1uQIDAQAB"
 }

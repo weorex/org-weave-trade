@@ -34,6 +34,7 @@ export async function handleCaptureApi(request: Request) {
       client.from('organizations').select('status').eq('id', org).maybeSingle(),
     ])
     if (membership.error || organization.error || membership.data?.status !== 'active' || organization.data?.status !== 'active') return reply({ error: 'Organization access denied.' }, 403)
+    const role = membership.data.role_key
     const [types, fields, layouts] = await Promise.all([
       client.from('entity_types').select('*').eq('organization_id', org).order('version', { ascending: false }),
       client.from('entity_field_definitions').select('*').eq('organization_id', org).order('position'),
@@ -44,7 +45,7 @@ export async function handleCaptureApi(request: Request) {
     const configurations = types.data.filter(t => { if (seen.has(t.id)) return false; seen.add(t.id); return true }).map(t => ({
       id: t.id, version: t.version,
       config: configurationSchema.parse({ name: t.name, key: t.type_key, fields: fields.data.filter(f => f.entity_type_id === t.id && f.configuration_version === t.version).map(f => ({ key: f.field_key, label: f.label, type: f.field_type, required: f.required, settings: f.settings })), layout: layouts.data.find(l => l.entity_type_id === t.id && l.configuration_version === t.version)?.layout }),
-    })).filter(t => may(membership.data.role_key, t.config, 'read') && may(membership.data.role_key, t.config, 'create'))
+    })).filter(t => may(role, t.config, 'read') && may(role, t.config, 'create'))
     if (!input) {
       const records: { id: string; typeId: string; values: Json }[] = []
       for (let offset = 0; ; offset += 500) {
