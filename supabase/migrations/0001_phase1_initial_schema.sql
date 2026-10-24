@@ -887,7 +887,7 @@ begin
 end;
 $$;
 
-grant execute on public.write_audit_log to authenticated;
+grant execute on function public.write_audit_log(uuid, text, text, uuid, jsonb, jsonb) to authenticated;
 
 -- =========================================================
 -- 12. TENANT AUTHORIZATION HELPERS
@@ -959,9 +959,9 @@ as $$
     or public.has_org_role(p_org_id, array['owner', 'admin']);
 $$;
 
-grant execute on public.is_org_member to authenticated;
-grant execute on public.has_org_role to authenticated;
-grant execute on public.has_org_permission to authenticated;
+grant execute on function public.is_org_member(uuid) to authenticated;
+grant execute on function public.has_org_role(uuid, text[]) to authenticated;
+grant execute on function public.has_org_permission(uuid, text[]) to authenticated;
 
 -- =========================================================
 -- 13. ENABLE ROW LEVEL SECURITY (remaining tables)
