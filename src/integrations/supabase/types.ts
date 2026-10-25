@@ -1579,6 +1579,13 @@ export type Database = {
         Returns: Json
       }
       is_org_member: { Args: { p_org_id: string }; Returns: boolean }
+      list_org_member_names: {
+        Args: { p_org: string }
+        Returns: {
+          display_name: string
+          user_id: string
+        }[]
+      }
       mark_notifications_read: {
         Args: { p_ids: string[]; p_org: string }
         Returns: number
