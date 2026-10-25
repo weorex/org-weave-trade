@@ -27,3 +27,8 @@
 - Duplicate preview is advisory; SKU preview covers the first 1,000 SKUs. The RPC checks the whole tenant catalogue. Company matching is heuristic, not legal-entity identity verification; direct inserts outside the capture RPC can race company/contact detection. Existing unique SKU constraints remain authoritative.
 - Capture history is stored and audited, but a dedicated history-management UI, undo/delete workflow, extension-store publishing, shadow-DOM/image/OCR capture and automatic token refresh are not included.
 - Source paths may contain sensitive data; users can edit the source URL before saving. Queries/fragments/embedded credentials are automatically removed.
+## October 25 capture usability update
+- Version 1.1.0 retains reviewed drafts and organization/type choices in trusted browser-session storage; disconnect or browser restart clears them.
+- Expired/401 credentials are cleared, making Reconnect available without discarding the draft. The maximum credential lifetime remains 15 minutes; automatic renewal was deliberately not introduced.
+- Captured table cells are editable; manual product entries work without an HTML table. SKU/name validation and the combined 200-product limit remain enforced.
+- Focused regression tests and standalone extension build/package passed. Production Chrome identity reconnection and populated product save/readback remain unverified; local browser callback did not complete.

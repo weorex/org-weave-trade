@@ -40,3 +40,9 @@
 - [x] Database tests for cross-tenant access, privilege escalation, file access, duplicate imports, workflow failures (41 checks pass, rolled back).
 - [x] Deployment checklist and risks in PHASE6.md.
 - [ ] Custom roles in entity-type permissions; resume workflows after approval. Not requested yet — listed as risks.
+
+# Dashboard and capture fixes (Oct 25)
+- [x] Show member names and add member invitation form; verified signed-in names and invitation creation.
+- [x] List all accessible organizations on the dashboard; verified the current organization list.
+- [x] Preserve session-only extension drafts across popup closure/reconnection, expose reconnect after expiry, and add editable/manual product rows; tests and extension packaging passed.
+- [ ] Verify Chrome identity reconnection and populated product save/readback on production. Blocker: fixed published host must serve the latest app; local browser callback did not complete.

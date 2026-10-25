@@ -42,11 +42,15 @@ export const getOrganizationOverview = createServerFn({ method: 'POST' })
     const membership = await context.supabase.from('organization_memberships').select('*').eq('organization_id', data.organizationId).eq('user_id', context.userId).eq('status', 'active').single()
     const organization = await context.supabase.from('organizations').select('*').eq('id', data.organizationId).single()
     if (membership.error || organization.error || organization.data.status !== 'active') throw new Error('Organization access denied')
-    const [members, audit, profile] = await Promise.all([
+    const [members, audit, profile, names, roles, permission] = await Promise.all([
       context.supabase.from('organization_memberships').select('*').eq('organization_id', organization.data.id).order('created_at'),
       context.supabase.from('audit_logs').select('*').eq('organization_id', organization.data.id).order('created_at', { ascending: false }).limit(8),
       context.supabase.from('profiles').select('*').eq('id', context.userId).maybeSingle(),
+      context.supabase.rpc('list_org_member_names', { p_org: data.organizationId }),
+      context.supabase.from('organization_roles').select('role_key,display_name').eq('organization_id', data.organizationId).neq('role_key', 'owner'),
+      context.supabase.rpc('has_permission', { p_org: data.organizationId, p_perm: 'members.invite' }),
     ])
-    if (members.error || audit.error || profile.error) throw new Error('Unable to load organization overview')
-    return { organization: organization.data, membership: membership.data, members: members.data, audit: audit.data, profile: profile.data }
+    if (members.error || audit.error || profile.error || names.error || roles.error || permission.error) throw new Error('Unable to load organization overview')
+    const displayNames = new Map(names.data.map(p => [p.user_id, p.display_name]))
+    return { organization: organization.data, membership: membership.data, members: members.data.map(m => ({ ...m, name: displayNames.get(m.user_id)?.trim() || (m.user_id === context.userId ? 'You' : 'Unnamed member') })), audit: audit.data, profile: profile.data, roles: roles.data, canInvite: permission.data === true }
   })

@@ -26,3 +26,11 @@ export function mapProductRows(rows: string[][], mapping: Record<string, number>
     return productSchema.parse({ sku: value('sku'), name: value('name'), category: value('category'), description: value('description'), unit: value('unit') || 'piece' })
   })
 }
+
+export function combineCaptureProducts(mapped: z.infer<typeof productSchema>[], manual: unknown[]) {
+  return z.array(productSchema).max(200, 'Select or add at most 200 products').parse([...mapped, ...manual])
+}
+
+export function captureSessionUsable(session: { token: string; expires: number } | null | undefined, now = Date.now()): session is { token: string; expires: number } {
+  return !!session && !!session.token && Number.isFinite(session.expires) && session.expires * 1000 > now
+}
