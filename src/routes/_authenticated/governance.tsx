@@ -3,11 +3,12 @@ import { queryOptions, useQueryClient, useSuspenseQuery } from '@tanstack/react-
 import { useServerFn } from '@tanstack/react-start'
 import { useState, type ReactNode } from 'react'
 import { z } from 'zod'
-import { ArrowLeft, Bell, Check, Copy, Play, RotateCcw, X } from 'lucide-react'
+import { Bell, Check, Copy, Play, RotateCcw, X } from 'lucide-react'
 import { Brand } from '@/components/brand'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FormDialog } from '@/components/form-dialog'
+import { AppShell } from '@/components/app-shell'
 import { pageHead } from '@/lib/page-head'
 import { friendlyError } from '@/lib/server-retry'
 import { PERMISSIONS, PERMISSION_LABELS, workflowDefinition, type WorkflowStep } from '@/services/governance-schemas'
@@ -36,9 +37,8 @@ function Governance() {
   }
   const unread = data.notifications.filter(n => !n.read_at).length
   const ctx = { data, org, act, busy }
-  return <main className="mx-auto max-w-6xl px-5 py-8">
-    <div className="flex flex-wrap items-center justify-between gap-3"><Brand/><Button variant="outline" asChild><Link to="/dashboard"><ArrowLeft/>Dashboard</Link></Button></div>
-    <h1 className="mt-10 text-3xl font-semibold">Workflows & access</h1>
+  return <AppShell user={user} activeOrgId={org} title="Workflows & access"><main className="mx-auto max-w-6xl px-5 py-8">
+    <h1 className="text-3xl font-semibold">Workflows & access</h1>
     <p className="mt-2 text-sm text-muted-foreground">Your role: <span className="capitalize">{data.role}</span>. Every action is checked again on the server.</p>
     <nav className="mt-6 flex flex-wrap gap-2" aria-label="Sections">{TABS.map(t => <Button key={t} size="sm" variant={t === tab ? 'default' : 'outline'} onClick={() => { setTab(t); setMessage('') }}>{t === 'Notifications' && <Bell/>}{t}{t === 'Notifications' && unread > 0 && ` (${unread})`}</Button>)}</nav>
     {message && <p role="status" className="mt-5 rounded-md bg-muted p-3 text-sm">{message}</p>}
@@ -53,7 +53,7 @@ function Governance() {
       {tab === 'Notifications' && <Notifications {...ctx}/>}
       {tab === 'Activity' && <Activity {...ctx}/>}
     </section>
-  </main>
+  </main></AppShell>
 }
 type Ctx = { data: Data; org: string; act: (fn: () => Promise<unknown>, done?: string) => Promise<void>; busy: boolean }
 const Card = ({ title, children }: { title: string; children: ReactNode }) => <div className="rounded-lg border bg-card p-5"><h2 className="mb-4 font-semibold">{title}</h2>{children}</div>

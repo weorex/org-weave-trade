@@ -12,6 +12,15 @@
   "host_permissions": [
     "https://org-weave-trade.lovable.app/*"
   ],
+  "externally_connectable": {
+    "matches": [
+      "https://org-weave-trade.lovable.app/*"
+    ]
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_title": "Weorex Trade Capture"

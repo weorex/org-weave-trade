@@ -7,5 +7,12 @@ export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
   plugins: [react(), tailwindcss()],
   resolve: { alias: { '@': fileURLToPath(new URL('../src', import.meta.url)) } },
-  build: { outDir: 'dist', emptyOutDir: true, rollupOptions: { input: fileURLToPath(new URL('popup.html', import.meta.url)) } },
+  build: {
+    outDir: 'dist', emptyOutDir: true,
+    rollupOptions: {
+      input: { popup: fileURLToPath(new URL('popup.html', import.meta.url)), background: fileURLToPath(new URL('src/background.ts', import.meta.url)) },
+      // The manifest references the service worker by a fixed name.
+      output: { entryFileNames: chunk => chunk.name === 'background' ? 'background.js' : 'assets/[name]-[hash].js' },
+    },
+  },
 })

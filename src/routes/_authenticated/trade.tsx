@@ -6,6 +6,7 @@ import { TradeWorkspace } from '@/components/trade/trade-workspace'
 import { pageHead } from '@/lib/page-head'
 import { Button } from '@/components/ui/button'
 import { Brand } from '@/components/brand'
+import { AppShell } from '@/components/app-shell'
 const directoryQuery=(org:string,userId:string)=>queryOptions({queryKey:['trade-directory',userId,org],queryFn:()=>getTradeDirectory({data:{organizationId:org}})})
 export const Route=createFileRoute('/_authenticated/trade')({
   validateSearch:s=>z.object({org:z.string().uuid()}).parse(s),loaderDeps:({search})=>({org:search.org}),
@@ -14,4 +15,4 @@ export const Route=createFileRoute('/_authenticated/trade')({
   component:TradePage,
   errorComponent:()=> <main className="simple-page"><Brand/><h1 className="mt-12 text-2xl font-semibold">Trade workspace unavailable</h1><p className="my-5 text-sm text-muted-foreground">Choose an organization you have access to.</p><Button asChild><Link to="/dashboard">Return to dashboard</Link></Button></main>,
 })
-function TradePage(){const {org}=Route.useSearch();const {user}=Route.useRouteContext();const {data}=useSuspenseQuery(directoryQuery(org,user.id));return <TradeWorkspace key={org} org={org} userId={user.id} directory={data}/>}
+function TradePage(){const {org}=Route.useSearch();const {user}=Route.useRouteContext();const {data}=useSuspenseQuery(directoryQuery(org,user.id));return <AppShell user={user} activeOrgId={org} title="Manufacturers & products"><TradeWorkspace key={org} org={org} userId={user.id} directory={data}/></AppShell>}

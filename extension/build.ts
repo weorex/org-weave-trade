@@ -1,11 +1,15 @@
-import { mkdir, copyFile, readdir } from 'node:fs/promises'
+import { mkdir, copyFile, readdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 const root = resolve(import.meta.dir, '..')
 for (const command of [['bunx','tsgo','-p','extension/tsconfig.json'], ['bunx','vite','build','--config','extension/vite.config.ts']]) {
   const run = Bun.spawn(command, { cwd: root, stdout: 'inherit', stderr: 'inherit' })
   if (await run.exited !== 0) process.exit(1)
 }
-await copyFile(resolve(root,'extension/manifest.json'),resolve(root,'extension/dist/manifest.json'))
+// The single host permission must match the app host compiled into the popup.
+const manifest = JSON.parse(await readFile(resolve(root,'extension/manifest.json'),'utf8'))
+const app = process.env['VITE_WEOREX_APP_URL']
+if (app) manifest.host_permissions = manifest.externally_connectable.matches = [`${new URL(app).origin}/*`]
+await writeFile(resolve(root,'extension/dist/manifest.json'),JSON.stringify(manifest,null,2))
 await copyFile(resolve(root,'extension/INSTALL.md'),resolve(root,'extension/dist/INSTALL.md'))
 const archive = '/tmp/weorex-capture.zip'
 const zip = Bun.spawn(['python3','-c',`import pathlib,zipfile

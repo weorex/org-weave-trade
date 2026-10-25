@@ -13,11 +13,11 @@ TypeScript is checked before a standalone Vite build. Output is `extension/dist`
 6. Open a company web page and press Capture page. Choose an organization/type, edit fields, map table columns, edit and select product rows (or choose Add product for manual entries), and select named contacts, then Save capture.
 
 ## Privacy and permissions
-- `activeTab` + `scripting`: read only the accessible main-frame DOM of the active tab after Capture page is pressed. No background worker, content scripts, history permission, automatic navigation capture or cross-origin iframe access.
+- `activeTab` + `scripting`: read only the accessible main-frame DOM of the active tab after Capture page is pressed. No content scripts, history permission, automatic navigation capture or cross-origin iframe access.
 - `storage`: session-only capture credential and reviewed draft storage in trusted extension contexts. Closing and reopening the popup retains your draft and connection until expiry. Disconnect or browser restart clears them. Expiry requires Reconnect without losing your draft. No application access or refresh token is transferred. The opaque credential works only with the capture API and expires within 15 minutes. Signing out of the app does not guarantee immediate revocation; disconnect and close the browser to remove the locally held credential.
-- `identity`: user-approved connection with a random state and Chrome's extension-specific HTTPS redirect.
+- `identity`: user-approved connection with a random state and Chrome's extension-specific HTTPS redirect. A minimal background service worker runs only this connection flow: it opens the approval page in a tab and accepts the credential only from the fixed app origin (`externally_connectable`) with the matching random state. It never reads pages or browsing activity.
 - Single host permission: `https://org-weave-trade.lovable.app/*`, for authenticated Weorex API calls only. No privileged/publishable database keys in the extension.
-- URL queries, fragments and embedded credentials are removed. Hidden DOM, scripts, password fields, whole HTML and browsing history are not collected. Captured accessible contacts may be personal data; save only when authorized.
+- URL queries, fragments and embedded credentials are removed. Hidden DOM, password fields, whole HTML and browsing history are not collected. Scripts are not read, except schema.org product metadata (JSON-LD `Product`/`ItemList` entries) that pages publish for search engines. Captured accessible contacts may be personal data; save only when authorized.
 - Tables are bounded to 20, 200 rows each, 30 columns; selected products to 200 and contacts to 50. Shadow DOM, image text, blocked pages, and non-HTML catalogues are not read.
 
 ## Saving behavior

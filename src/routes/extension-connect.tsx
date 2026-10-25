@@ -30,6 +30,14 @@ function Connect() {
     try {
       const result = await issue({ data: { redirect,state } })
       const target = new URL(redirect)
+      // Current extensions accept the credential over externally_connectable messaging (only from this origin);
+      // older ones opened this page via launchWebAuthFlow and read it from the callback URL.
+      const runtime = (globalThis as { chrome?: { runtime?: { sendMessage?: (id: string, message: unknown, callback: (reply: unknown) => void) => void; lastError?: unknown } } }).chrome?.runtime
+      if (runtime?.sendMessage) {
+        const reply = await new Promise<{ ok?: boolean; error?: string } | undefined>(resolve => runtime.sendMessage?.(target.hostname.split('.')[0] ?? '', { type: 'weorex-capture-session', credential: result.credential, expires: result.expires, state }, r => resolve(runtime.lastError ? undefined : r as { ok?: boolean; error?: string })))
+        if (reply?.ok) { setMessage('Connected. Reopen the extension to continue.'); setBusy(false); return }
+        if (reply?.error) { setMessage(reply.error); setBusy(false); return }
+      }
       target.hash = new URLSearchParams({ capture_session: result.credential, expires_at: String(result.expires), state }).toString()
       window.location.assign(target.href)
     } catch { setMessage('Connection failed. Sign in again and retry.'); setBusy(false) }

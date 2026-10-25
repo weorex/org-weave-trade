@@ -10,6 +10,7 @@ import { getEntityWorkspace,publishEntityType,saveEntity,deleteEntity } from '@/
 import { TypeBuilder } from '@/components/entities/type-builder'
 import { EntityDetail,EntityForm,EntityTable,recordName } from '@/components/entities/entity-renderers'
 import { FormDialog } from '@/components/form-dialog'
+import { AppShell } from '@/components/app-shell'
 import { may,type EntityData,type EntityRecord,type VersionedType } from '@/services/entity-schemas'
 import { z } from 'zod'
 
@@ -33,7 +34,7 @@ function EntityWorkspace(){
   const currentForDetail=detail?latest.find(t=>t.id===detail.entity_type_id):null
   async function refresh(){await cache.invalidateQueries({queryKey:['entity-workspace',user.id,org]})}
   async function persist(values:EntityData){if(!active&&!detail)return;setBusy(true);try{const result=await save({data:{organizationId:org,typeId:detail?.entity_type_id??active?.id??'',id:detail?.id??null,revision:detail?.revision,values}});await refresh();setDetail(result);setCreating(false);setEditing(false)}finally{setBusy(false)}}
-  return <div className="min-h-screen bg-background"><header className="flex flex-wrap items-center justify-between gap-4 border-b bg-card px-5 py-5 md:px-9"><Brand/><div className="flex items-center gap-4"><span className="text-xs text-muted-foreground">{data.organizationName}</span><Button variant="outline" asChild><Link to="/dashboard"><ArrowLeft/>Dashboard</Link></Button></div></header>
+  return <AppShell user={user} activeOrgId={org} title="Entity types">
     <div className="mx-auto grid max-w-[1600px] lg:grid-cols-[230px_minmax(0,1fr)]"><aside className="border-b p-5 lg:min-h-[calc(100vh-85px)] lg:border-b-0 lg:border-r"><div className="mb-5 flex items-center justify-between"><p className="text-xs font-semibold uppercase text-muted-foreground">Entity types</p>{canConfigure&&<Button title="New entity type" aria-label="New entity type" variant="ghost" size="icon" onClick={()=>{setBuilder(undefined);setMode('builder');setDetail(null)}}><Plus/></Button>}</div><nav className="grid gap-1">{(canConfigure?latest:visible).map(t=><Button key={t.id} variant="ghost" className={`justify-start truncate ${active?.id===t.id?'bg-accent text-primary':''}`} onClick={()=>{setSelected(t.id);setMode('records');setDetail(null);setCreating(false);setError('')}}><Boxes/>{t.config.name}<span className="ml-auto text-[10px] text-muted-foreground">v{t.version}</span></Button>)}</nav>{!latest.length&&<p className="py-4 text-xs text-muted-foreground">No entity types yet.</p>}</aside>
     <main className="min-w-0 p-5 md:p-9">{error&&<p role="alert" className="mb-5 text-sm text-destructive">{error}</p>}
     {mode==='builder'&&canConfigure?<TypeBuilder key={`${builder?.id??'new'}-${builder?.version??0}`} initial={builder} types={latest} records={data.records} busy={busy} onPublish={async config=>{setBusy(true);try{await publish({data:{organizationId:org,id:builder?.id??null,expectedVersion:builder?.version??0,config}});await refresh();setMode('records')}finally{setBusy(false)}}}/>:
@@ -45,5 +46,5 @@ function EntityWorkspace(){
       <div className="mb-5 flex flex-wrap gap-2">{detail&&currentForDetail&&may(data.role,currentForDetail.config,'update')&&!editing&&<Button variant="outline" onClick={()=>setEditing(true)}><Settings2/>Edit</Button>}{detail&&currentForDetail&&may(data.role,currentForDetail.config,'delete')&&<Button variant="ghost" size="icon" aria-label="Delete record" title="Delete record" onClick={()=>setConfirmDelete(true)}><Trash2/></Button>}</div>
     {confirmDelete&&detail&&<div className="mb-6 flex flex-wrap items-center gap-4 border border-destructive p-4"><p className="text-sm">Permanently delete this record?</p><Button variant="destructive" disabled={busy} onClick={async()=>{setBusy(true);try{await remove({data:{organizationId:org,typeId:detail.entity_type_id,id:detail.id}});await refresh();setDetail(null);setConfirmDelete(false)}catch(e){setError(e instanceof Error?e.message:'Unable to delete')}finally{setBusy(false)}}}>Delete</Button><Button variant="outline" onClick={()=>setConfirmDelete(false)}>Cancel</Button></div>}
     {creating&&active?<EntityForm key={`new-${active.id}`} config={active.config} records={data.records} busy={busy} onSave={persist}/>:detail&&recordConfig?(editing?<EntityForm key={`${detail.id}-${detail.revision}`} config={recordConfig.config} initial={detail.data} records={data.records} busy={busy} onSave={persist}/>:<EntityDetail config={recordConfig.config} record={detail} records={data.records} onRelated={r=>{setDetail(r);setEditing(false)}}/>):null}</FormDialog>
-    </main></div></div>
+    </main></div></AppShell>
 }

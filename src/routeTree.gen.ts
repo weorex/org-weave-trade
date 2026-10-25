@@ -21,6 +21,7 @@ import { Route as AuthenticatedEntityTypesRouteImport } from './routes/_authenti
 import { Route as AuthenticatedGovernanceRouteImport } from './routes/_authenticated/governance'
 import { Route as AuthenticatedLogisticsRouteImport } from './routes/_authenticated/logistics'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedTradeRouteImport } from './routes/_authenticated/trade'
 import { Route as ApiPublicCaptureRouteImport } from './routes/api/public/capture'
 
@@ -84,6 +85,11 @@ const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTradeRoute = AuthenticatedTradeRouteImport.update({
   id: '/trade',
   path: '/trade',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/governance': typeof AuthenticatedGovernanceRoute
   '/logistics': typeof AuthenticatedLogisticsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/orders': typeof AuthenticatedOrdersRoute
   '/trade': typeof AuthenticatedTradeRoute
   '/api/public/capture': typeof ApiPublicCaptureRoute
 }
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/governance': typeof AuthenticatedGovernanceRoute
   '/logistics': typeof AuthenticatedLogisticsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/orders': typeof AuthenticatedOrdersRoute
   '/trade': typeof AuthenticatedTradeRoute
   '/api/public/capture': typeof ApiPublicCaptureRoute
 }
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/_authenticated/governance': typeof AuthenticatedGovernanceRoute
   '/_authenticated/logistics': typeof AuthenticatedLogisticsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/trade': typeof AuthenticatedTradeRoute
   '/api/public/capture': typeof ApiPublicCaptureRoute
 }
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/governance'
     | '/logistics'
     | '/onboarding'
+    | '/orders'
     | '/trade'
     | '/api/public/capture'
   fileRoutesByTo: FileRoutesByTo
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/governance'
     | '/logistics'
     | '/onboarding'
+    | '/orders'
     | '/trade'
     | '/api/public/capture'
   id:
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/_authenticated/governance'
     | '/_authenticated/logistics'
     | '/_authenticated/onboarding'
+    | '/_authenticated/orders'
     | '/_authenticated/trade'
     | '/api/public/capture'
   fileRoutesById: FileRoutesById
@@ -288,6 +300,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/orders': {
+      id: '/_authenticated/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof AuthenticatedOrdersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/trade': {
       id: '/_authenticated/trade'
       path: '/trade'
@@ -311,6 +330,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedGovernanceRoute: typeof AuthenticatedGovernanceRoute
   AuthenticatedLogisticsRoute: typeof AuthenticatedLogisticsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedTradeRoute: typeof AuthenticatedTradeRoute
 }
 
@@ -320,6 +340,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedGovernanceRoute: AuthenticatedGovernanceRoute,
   AuthenticatedLogisticsRoute: AuthenticatedLogisticsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedTradeRoute: AuthenticatedTradeRoute,
 }
 

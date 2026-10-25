@@ -685,6 +685,372 @@ export type Database = {
           },
         ]
       }
+      order_documents: {
+        Row: {
+          created_at: string
+          created_by: string
+          doc_type: string
+          id: string
+          name: string
+          object_path: string
+          order_id: string
+          organization_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          doc_type: string
+          id?: string
+          name: string
+          object_path: string
+          order_id: string
+          organization_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          doc_type?: string
+          id?: string
+          name?: string
+          object_path?: string
+          order_id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_documents_organization_id_order_id_fkey"
+            columns: ["organization_id", "order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      order_events: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          detail: string
+          id: string
+          order_id: string
+          organization_id: string
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: string
+          id?: string
+          order_id: string
+          organization_id: string
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: string
+          id?: string
+          order_id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_events_organization_id_order_id_fkey"
+            columns: ["organization_id", "order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          notes: string
+          order_id: string
+          organization_id: string
+          product_id: string | null
+          quantity: number
+          target_price: number | null
+          unit: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          notes?: string
+          order_id: string
+          organization_id: string
+          product_id?: string | null
+          quantity: number
+          target_price?: number | null
+          unit: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          notes?: string
+          order_id?: string
+          organization_id?: string
+          product_id?: string | null
+          quantity?: number
+          target_price?: number | null
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_organization_id_order_id_fkey"
+            columns: ["organization_id", "order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "order_items_organization_id_product_id_fkey"
+            columns: ["organization_id", "product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      order_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string
+          currency: string
+          direction: string
+          id: string
+          method: string
+          notes: string
+          order_id: string
+          organization_id: string
+          paid_on: string
+          party_entity_id: string
+          quote_id: string | null
+          reference: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string
+          currency: string
+          direction: string
+          id?: string
+          method: string
+          notes?: string
+          order_id: string
+          organization_id: string
+          paid_on: string
+          party_entity_id: string
+          quote_id?: string | null
+          reference?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string
+          currency?: string
+          direction?: string
+          id?: string
+          method?: string
+          notes?: string
+          order_id?: string
+          organization_id?: string
+          paid_on?: string
+          party_entity_id?: string
+          quote_id?: string | null
+          reference?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_payments_organization_id_order_id_fkey"
+            columns: ["organization_id", "order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "order_payments_organization_id_party_entity_id_fkey"
+            columns: ["organization_id", "party_entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "order_payments_organization_id_quote_id_fkey"
+            columns: ["organization_id", "quote_id"]
+            isOneToOne: false
+            referencedRelation: "order_quotes"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      order_quotes: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string
+          currency: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string
+          description: string
+          id: string
+          kind: string
+          notes: string
+          order_id: string
+          organization_id: string
+          party_entity_id: string
+          quote_number: string
+          received_on: string
+          revises_quote_id: string | null
+          status: string
+          valid_until: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string
+          currency: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string
+          description?: string
+          id?: string
+          kind: string
+          notes?: string
+          order_id: string
+          organization_id: string
+          party_entity_id: string
+          quote_number?: string
+          received_on?: string
+          revises_quote_id?: string | null
+          status?: string
+          valid_until?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string
+          currency?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string
+          description?: string
+          id?: string
+          kind?: string
+          notes?: string
+          order_id?: string
+          organization_id?: string
+          party_entity_id?: string
+          quote_number?: string
+          received_on?: string
+          revises_quote_id?: string | null
+          status?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_quotes_organization_id_order_id_fkey"
+            columns: ["organization_id", "order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "order_quotes_organization_id_party_entity_id_fkey"
+            columns: ["organization_id", "party_entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "order_quotes_organization_id_revises_quote_id_fkey"
+            columns: ["organization_id", "revises_quote_id"]
+            isOneToOne: false
+            referencedRelation: "order_quotes"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          buyer_entity_id: string | null
+          created_at: string
+          created_by: string
+          currency: string
+          destination: string
+          id: string
+          incoterm: string
+          notes: string
+          order_number: string
+          order_type: string
+          order_value: number | null
+          organization_id: string
+          required_by: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          buyer_entity_id?: string | null
+          created_at?: string
+          created_by?: string
+          currency: string
+          destination?: string
+          id?: string
+          incoterm?: string
+          notes?: string
+          order_number: string
+          order_type: string
+          order_value?: number | null
+          organization_id: string
+          required_by?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          buyer_entity_id?: string | null
+          created_at?: string
+          created_by?: string
+          currency?: string
+          destination?: string
+          id?: string
+          incoterm?: string
+          notes?: string
+          order_number?: string
+          order_type?: string
+          order_value?: number | null
+          organization_id?: string
+          required_by?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_organization_id_buyer_entity_id_fkey"
+            columns: ["organization_id", "buyer_entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "orders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_invitations: {
         Row: {
           accepted_at: string | null
@@ -1518,6 +1884,10 @@ export type Database = {
     }
     Functions: {
       accept_invitation: { Args: { p_token: string }; Returns: string }
+      add_order_note: {
+        Args: { p_note: string; p_order: string; p_org: string }
+        Returns: undefined
+      }
       apply_entity_status: {
         Args: { p_entity: string; p_org: string; p_to: string }
         Returns: undefined
@@ -1539,6 +1909,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      can_order_object: {
+        Args: { p_name: string; p_write?: boolean }
+        Returns: boolean
+      }
       can_trade_entity: {
         Args: { p_entity: string; p_org: string; p_write?: boolean }
         Returns: boolean
@@ -1555,6 +1929,15 @@ export type Database = {
           p_org: string
         }
         Returns: string
+      }
+      decide_order_quote: {
+        Args: {
+          p_note: string
+          p_org: string
+          p_quote: string
+          p_status: string
+        }
+        Returns: undefined
       }
       execute_workflow_run: { Args: { p_run: string }; Returns: Json }
       has_org_role: {
@@ -1597,6 +1980,15 @@ export type Database = {
           p_org: string
           p_title: string
           p_user: string
+        }
+        Returns: undefined
+      }
+      order_event: {
+        Args: {
+          p_action: string
+          p_detail: string
+          p_order: string
+          p_org: string
         }
         Returns: undefined
       }
@@ -1837,3 +2229,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
