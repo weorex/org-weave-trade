@@ -42,6 +42,7 @@
 - [ ] Custom roles in entity-type permissions; resume workflows after approval. Not requested yet — listed as risks.
 
 # Dashboard and capture fixes (Oct 25)
-- [ ] Show member names and add member invitation form.
-- [ ] List all accessible organizations on the dashboard.
-- [ ] Preserve extension drafts, renew approved connections, and allow product entry.
+- [x] Show member names and add member invitation form; verified signed-in names and invitation creation.
+- [x] List all accessible organizations on the dashboard; verified the current organization list.
+- [x] Preserve session-only extension drafts across popup closure/reconnection, expose reconnect after expiry, and add editable/manual product rows; tests and extension packaging passed.
+- [ ] Verify Chrome identity reconnection and populated product save/readback on production. Blocker: fixed published host must serve the latest app; local browser callback did not complete.
