@@ -26,7 +26,7 @@ function Popup() {
   const [values, setValues] = useState<EntityData>({}); const [contacts, setContacts] = useState<Contact[]>([])
   const [tableIndex, setTableIndex] = useState(0); const [mapping, setMapping] = useState<Record<string, number>>({})
   const [sourceUrl, setSourceUrl] = useState('')
-  const [selected, setSelected] = useState<number[]>([]); const [requestId, setRequestId] = useState(crypto.randomUUID())
+  const [selected, setSelected] = useState<number[]>([]); const [requestId, setRequestId] = useState<string>(crypto.randomUUID())
   const [busy, setBusy] = useState(false); const [status, setStatus] = useState(''); const [saved, setSaved] = useState(false)
   const type = context?.types.find(t => t.id === typeId)
   const originalTable = snapshot?.tables[tableIndex]
