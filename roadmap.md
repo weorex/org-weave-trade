@@ -40,3 +40,8 @@
 - [x] Database tests for cross-tenant access, privilege escalation, file access, duplicate imports, workflow failures (41 checks pass, rolled back).
 - [x] Deployment checklist and risks in PHASE6.md.
 - [ ] Custom roles in entity-type permissions; resume workflows after approval. Not requested yet — listed as risks.
+
+# Dashboard and capture fixes (Oct 25)
+- [ ] Show member names and add member invitation form.
+- [ ] List all accessible organizations on the dashboard.
+- [ ] Preserve extension drafts, renew approved connections, and allow product entry.
