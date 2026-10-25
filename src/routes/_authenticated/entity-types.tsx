@@ -9,6 +9,7 @@ import { pageHead } from '@/lib/page-head'
 import { getEntityWorkspace,publishEntityType,saveEntity,deleteEntity } from '@/services/entities.functions'
 import { TypeBuilder } from '@/components/entities/type-builder'
 import { EntityDetail,EntityForm,EntityTable,recordName } from '@/components/entities/entity-renderers'
+import { FormDialog } from '@/components/form-dialog'
 import { may,type EntityData,type EntityRecord,type VersionedType } from '@/services/entity-schemas'
 import { z } from 'zod'
 
