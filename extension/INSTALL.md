@@ -10,11 +10,11 @@ TypeScript is checked before a standalone Vite build. Output is `extension/dist`
 3. Enable Developer mode.
 4. Choose Load unpacked and select the folder containing `manifest.json`.
 5. Open Weorex Trade Capture and press Connect. Sign in to Weorex in another tab if needed, then approve the connection.
-6. Open a company web page and press Capture page. Choose an organization/type, edit fields, map table columns, select product rows and named contacts, then Save capture.
+6. Open a company web page and press Capture page. Choose an organization/type, edit fields, map table columns, edit and select product rows (or choose Add product for manual entries), and select named contacts, then Save capture.
 
 ## Privacy and permissions
 - `activeTab` + `scripting`: read only the accessible main-frame DOM of the active tab after Capture page is pressed. No background worker, content scripts, history permission, automatic navigation capture or cross-origin iframe access.
-- `storage`: session-only capture credential storage in trusted extension contexts; drafts remain only in popup memory. Closing the popup clears the captured draft. Disconnect clears credentials; browser restart/expiry requires reconnecting. No application access or refresh token is transferred. The opaque credential works only with the capture API and expires within 15 minutes. Signing out of the app does not guarantee immediate revocation; disconnect and close the browser to remove the locally held credential.
+- `storage`: session-only capture credential and reviewed draft storage in trusted extension contexts. Closing and reopening the popup retains your draft and connection until expiry. Disconnect or browser restart clears them. Expiry requires Reconnect without losing your draft. No application access or refresh token is transferred. The opaque credential works only with the capture API and expires within 15 minutes. Signing out of the app does not guarantee immediate revocation; disconnect and close the browser to remove the locally held credential.
 - `identity`: user-approved connection with a random state and Chrome's extension-specific HTTPS redirect.
 - Single host permission: `https://org-weave-trade.lovable.app/*`, for authenticated Weorex API calls only. No privileged/publishable database keys in the extension.
 - URL queries, fragments and embedded credentials are removed. Hidden DOM, scripts, password fields, whole HTML and browsing history are not collected. Captured accessible contacts may be personal data; save only when authorized.
