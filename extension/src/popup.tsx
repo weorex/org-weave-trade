@@ -13,6 +13,7 @@ type Snapshot = ReturnType<typeof extractAccessiblePage>
 type Context = { types: { id: string; version: number; config: EntityConfiguration }[]; records: { id: string; typeId: string; values: EntityData }[]; productSkus: string[]; canTrade: boolean }
 type ManualProduct = { sku: string; name: string; category: string; description: string; unit: string }
 type Contact = { name: string; email: string; phone: string; position: string; notes: string; selected: boolean }
+type Draft = { org: string; typeId: string; snapshot: Snapshot | null; values: EntityData; contacts: Contact[]; tableIndex: number; mapping: Record<string, number>; sourceUrl: string; selected: number[]; requestId: string; manualProducts: ManualProduct[]; edits: Record<number, string[]>; saved: boolean }
 
 function Popup() {
   const [ready, setReady] = useState(false)
@@ -43,7 +44,7 @@ function Popup() {
   useEffect(() => { void task(async () => {
     await chrome.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_CONTEXTS' })
     const stored = await chrome.storage.session.get(['session', 'draft'])
-    const draft = stored.draft
+    const draft = stored.draft as Partial<Draft> | undefined
     if (draft) { setOrg(draft.org ?? ''); setTypeId(draft.typeId ?? ''); setSnapshot(draft.snapshot ?? null); setValues(draft.values ?? {}); setContacts(draft.contacts ?? []); setTableIndex(draft.tableIndex ?? 0); setMapping(draft.mapping ?? {}); setSourceUrl(draft.sourceUrl ?? ''); setSelected(draft.selected ?? []); setRequestId(draft.requestId ?? crypto.randomUUID()); setManualProducts(draft.manualProducts ?? []); setEdits(draft.edits ?? {}); setSaved(draft.saved ?? false) }
     const active = stored.session as Session | undefined
     if (captureSessionUsable(active)) {
