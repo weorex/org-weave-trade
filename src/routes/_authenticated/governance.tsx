@@ -7,6 +7,7 @@ import { ArrowLeft, Bell, Check, Copy, Play, RotateCcw, X } from 'lucide-react'
 import { Brand } from '@/components/brand'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { FormDialog } from '@/components/form-dialog'
 import { pageHead } from '@/lib/page-head'
 import { friendlyError } from '@/lib/server-retry'
 import { PERMISSIONS, PERMISSION_LABELS, workflowDefinition, type WorkflowStep } from '@/services/governance-schemas'
@@ -154,13 +155,14 @@ function Workflows({ data, org, act, busy }: Ctx) {
       {data.can['workflows.manage'] && <Button size="sm" variant="outline" onClick={() => setEditing({ id: w.id, name: w.name, type: w.entity_type_id, steps: steps.success ? steps.data : [blankStep()], active: w.active })}>Edit</Button>}</div> })}</div> : <Empty>No workflows yet.</Empty>}
       {data.can['workflows.manage'] && !editing && <Button className="mt-4" onClick={() => setEditing({ id: null, name: '', type: data.entityTypes[0]!.id, steps: [blankStep()], active: true })}>New workflow</Button>}
     </Card>
-    {editing && <Card title={editing.id ? 'Edit workflow' : 'New workflow'}>
+    <FormDialog open={!!editing} onClose={() => setEditing(null)} title={editing?.id ? 'Edit workflow' : 'New workflow'} description="Steps run in order. If any step fails, every change from that run is undone. Only these four actions are available." wide>
+      {editing && <>
       <div className="grid gap-4 sm:grid-cols-2"><label className="field-label">Name<Input value={editing.name} maxLength={120} onChange={e => setEditing({ ...editing, name: e.target.value })}/></label><label className="field-label">Entity type<select className={sel} value={editing.type} disabled={!!editing.id} onChange={e => setEditing({ ...editing, type: e.target.value })}>{data.entityTypes.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}</select></label></div>
-      <p className="mt-4 text-sm text-muted-foreground">Steps run in order. If any step fails, every change from that run is undone. Only these four actions are available.</p>
       <div className="mt-3 grid gap-3">{editing.steps.map((s, i) => <StepEditor key={i} step={s} data={data} onChange={n => setEditing({ ...editing, steps: editing.steps.map((x, j) => j === i ? n : x) })} onRemove={() => setEditing({ ...editing, steps: editing.steps.filter((_, j) => j !== i) })}/>)}</div>
       <div className="mt-4 flex flex-wrap gap-3"><Button variant="outline" disabled={editing.steps.length >= 20} onClick={() => setEditing({ ...editing, steps: [...editing.steps, blankStep()] })}>Add step</Button><label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={editing.active} onChange={e => setEditing({ ...editing, active: e.target.checked })}/>Active</label>
         <Button disabled={busy} onClick={() => act(async () => { const parsed = workflowDefinition.safeParse(editing.steps); if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Check the workflow steps.'); await save({ data: { organizationId: org, id: editing.id, name: editing.name, entityTypeId: editing.type, definition: parsed.data, active: editing.active } }); setEditing(null) }, 'Workflow saved.')}>Save workflow</Button><Button variant="ghost" onClick={() => setEditing(null)}>Cancel</Button></div>
-    </Card>}
+      </>}
+    </FormDialog>
   </div>
 }
 
